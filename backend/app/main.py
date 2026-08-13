@@ -17,6 +17,7 @@ from app.routers.bulk import records_router as bulk_records_router
 from app.routers.bulk import zones_router as bulk_zones_router
 from app.routers.dns_records import router as dns_records_router
 from app.routers.dns_records import zone_router as dns_zone_router
+from app.routers.feedback import router as feedback_router
 from app.routers.hosted_zones import router as hosted_zones_router
 from app.routers.stats import router as stats_router
 from app.routers.zone_import import router as zone_import_router
@@ -74,6 +75,7 @@ def create_app() -> FastAPI:
     application.include_router(zone_export_router, prefix="/api/hosted-zones/{zone_id}")
     application.include_router(stats_router, prefix="/api/stats")
     application.include_router(aws_mock_router, prefix="/api/aws")
+    application.include_router(feedback_router, prefix="/api/feedback")
 
     @application.get("/api/health", tags=["meta"])
     def health_check() -> dict:
