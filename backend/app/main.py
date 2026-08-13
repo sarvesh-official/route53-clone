@@ -12,6 +12,8 @@ from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.core.exceptions import AppException
 from app.routers.auth import router as auth_router
+from app.routers.bulk import records_router as bulk_records_router
+from app.routers.bulk import zones_router as bulk_zones_router
 from app.routers.dns_records import router as dns_records_router
 from app.routers.dns_records import zone_router as dns_zone_router
 from app.routers.hosted_zones import router as hosted_zones_router
@@ -65,6 +67,8 @@ def create_app() -> FastAPI:
     application.include_router(hosted_zones_router, prefix="/api/hosted-zones")
     application.include_router(dns_zone_router, prefix="/api/hosted-zones/{zone_id}/records")
     application.include_router(dns_records_router, prefix="/api/records")
+    application.include_router(bulk_records_router, prefix="/api/records")
+    application.include_router(bulk_zones_router, prefix="/api/hosted-zones")
     application.include_router(zone_import_router, prefix="/api/hosted-zones/{zone_id}")
     application.include_router(zone_export_router, prefix="/api/hosted-zones/{zone_id}")
     application.include_router(stats_router, prefix="/api/stats")
