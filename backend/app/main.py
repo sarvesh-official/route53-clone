@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.core.exceptions import AppException
 from app.routers.auth import router as auth_router
+from app.routers.aws_mock import router as aws_mock_router
 from app.routers.bulk import records_router as bulk_records_router
 from app.routers.bulk import zones_router as bulk_zones_router
 from app.routers.dns_records import router as dns_records_router
@@ -72,6 +73,7 @@ def create_app() -> FastAPI:
     application.include_router(zone_import_router, prefix="/api/hosted-zones/{zone_id}")
     application.include_router(zone_export_router, prefix="/api/hosted-zones/{zone_id}")
     application.include_router(stats_router, prefix="/api/stats")
+    application.include_router(aws_mock_router, prefix="/api/aws")
 
     @application.get("/api/health", tags=["meta"])
     def health_check() -> dict:
