@@ -36,6 +36,11 @@ def client() -> TestClient:
             password_hash=hash_password("demo1234"),
             display_name="Demo User",
         ))
+        db.add(User(
+            email="other@example.com",
+            password_hash=hash_password("other1234"),
+            display_name="Other User",
+        ))
         db.commit()
 
     def override_get_db() -> Session:

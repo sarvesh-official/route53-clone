@@ -54,7 +54,7 @@ def _make_zone(db: Session, user_id: str, name: str, zone_type: str, comment: st
         type="NS",
         ttl=172800,
         value="ns-2048.awsdns-64.com.\nns-2049.awsdns-65.net.\nns-2050.awsdns-66.org.\nns-2051.awsdns-67.co.uk.",
-        routing_policy="Simple",
+        routing_policy="SIMPLE",
     )
 
     # SOA record — start of authority, contains serial + refresh/retry/expire values
@@ -65,7 +65,7 @@ def _make_zone(db: Session, user_id: str, name: str, zone_type: str, comment: st
         type="SOA",
         ttl=900,
         value="ns-2048.awsdns-64.com. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400",
-        routing_policy="Simple",
+        routing_policy="SIMPLE",
     )
 
     db.add_all([ns_record, soa_record])
@@ -82,7 +82,7 @@ def _make_extra_records(db: Session, zone_id: str, zone_name: str) -> None:
             type="A",
             ttl=300,
             value="192.0.2.1",
-            routing_policy="Simple",
+            routing_policy="SIMPLE",
         ),
         DnsRecord(
             id=generate_record_id(),
@@ -91,7 +91,7 @@ def _make_extra_records(db: Session, zone_id: str, zone_name: str) -> None:
             type="A",
             ttl=300,
             value="192.0.2.2",
-            routing_policy="Simple",
+            routing_policy="SIMPLE",
         ),
         DnsRecord(
             id=generate_record_id(),
@@ -100,7 +100,7 @@ def _make_extra_records(db: Session, zone_id: str, zone_name: str) -> None:
             type="MX",
             ttl=3600,
             value="10 mail.example.com.\n20 mail2.example.com.",
-            routing_policy="Simple",
+            routing_policy="SIMPLE",
         ),
         DnsRecord(
             id=generate_record_id(),
@@ -109,7 +109,7 @@ def _make_extra_records(db: Session, zone_id: str, zone_name: str) -> None:
             type="TXT",
             ttl=3600,
             value='"v=spf1 include:_spf.example.com ~all"',
-            routing_policy="Simple",
+            routing_policy="SIMPLE",
         ),
     ]
     db.add_all(records)

@@ -21,7 +21,7 @@ class DnsRecord(Base, TimestampMixin):
     type: Mapped[str] = mapped_column(String, nullable=False)
     ttl: Mapped[int] = mapped_column(Integer, nullable=False, default=300)
     value: Mapped[str] = mapped_column(String, nullable=False)
-    routing_policy: Mapped[str] = mapped_column(String, default="Simple", nullable=False)
+    routing_policy: Mapped[str] = mapped_column(String, default="SIMPLE", nullable=False)
 
     zone: Mapped["HostedZone"] = relationship(back_populates="records")
 

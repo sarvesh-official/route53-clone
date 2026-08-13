@@ -28,6 +28,11 @@ class BadRequestException(AppException):
         super().__init__(status.HTTP_400_BAD_REQUEST, code, detail)
 
 
+class ValidationFailedException(AppException):
+    def __init__(self, detail: str = "Validation failed") -> None:
+        super().__init__(status.HTTP_400_BAD_REQUEST, "VALIDATION_FAILED", detail)
+
+
 class UnauthorizedException(AppException):
     def __init__(
         self, code: str = "TOKEN_INVALID", detail: str = "Authentication required"
