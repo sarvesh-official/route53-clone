@@ -15,6 +15,7 @@ from app.routers.auth import router as auth_router
 from app.routers.dns_records import router as dns_records_router
 from app.routers.dns_records import zone_router as dns_zone_router
 from app.routers.hosted_zones import router as hosted_zones_router
+from app.routers.stats import router as stats_router
 from app.routers.zone_import import router as zone_import_router
 from app.routers.zone_export import router as zone_export_router
 
@@ -66,6 +67,7 @@ def create_app() -> FastAPI:
     application.include_router(dns_records_router, prefix="/api/records")
     application.include_router(zone_import_router, prefix="/api/hosted-zones/{zone_id}")
     application.include_router(zone_export_router, prefix="/api/hosted-zones/{zone_id}")
+    application.include_router(stats_router, prefix="/api/stats")
 
     @application.get("/api/health", tags=["meta"])
     def health_check() -> dict:
