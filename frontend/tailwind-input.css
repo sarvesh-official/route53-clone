@@ -1,0 +1,45 @@
+/* Tailwind v4 input file — processed by @tailwindcss/cli */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@source "./src/**/*.{tsx,ts,jsx,js}";
+
+/* Cloudscape sets -webkit-appearance: button on all <button> elements,
+   restoring native browser styling. This overrides it so Tailwind classes work. */
+button[class*="appearance-none"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Amazon Ember — AWS's proprietary font, same fallback stack they use */
+body {
+  margin: 0;
+  font-family: "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
+  color: #0f141a;
+  background-color: #fafafa;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.placeholder-italic::placeholder {
+  font-style: italic;
+}
+
+/* Blue focus ring to match AWS console inputs */
+.r53-input:focus {
+  border-color: #006ce0;
+  box-shadow: 0 0 0 1px #006ce0;
+}
+
+/* Chrome's autofill adds a yellow background — override with AWS blue tint */
+.r53-input:-webkit-autofill,
+.r53-input:-webkit-autofill:hover,
+.r53-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #0f141a;
+  -webkit-box-shadow: 0 0 0 1000px #f0fbff inset;
+  caret-color: #0f141a;
+  border-color: #006ce0;
+}
