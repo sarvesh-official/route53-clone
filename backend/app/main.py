@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.core.exceptions import AppException
 from app.routers.auth import router as auth_router
+from app.routers.hosted_zones import router as hosted_zones_router
 
 
 def create_app() -> FastAPI:
@@ -42,12 +43,21 @@ def create_app() -> FastAPI:
     async def validation_exception_handler(
         request: Request, exc: RequestValidationError
     ) -> JSONResponse:
+        details = [
+            {
+                "field": ".".join(str(p) for p in err.get("loc", []) if p != "body"),
+                "message": err.get("msg", ""),
+                "type": err.get("type", ""),
+            }
+            for err in exc.errors()
+        ]
         return JSONResponse(
             status_code=422,
-            content={"detail": exc.errors(), "code": "VALIDATION_ERROR"},
+            content={"detail": details, "code": "VALIDATION_ERROR"},
         )
 
     application.include_router(auth_router, prefix="/api/auth")
+    application.include_router(hosted_zones_router, prefix="/api/hosted-zones")
 
     @application.get("/api/health", tags=["meta"])
     def health_check() -> dict:
