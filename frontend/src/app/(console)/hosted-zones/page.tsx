@@ -110,7 +110,11 @@ export default function HostedZonesPage() {
 
         <Box variant="p">
           Automatic mode is the current search behavior optimized for best filter results.{" "}
-          <Link href="#" onClick={(e) => e.preventDefault()}>
+          <Link
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            style={{ color: "var(--r53-light-accent)" }}
+          >
             To change modes go to settings.
           </Link>
         </Box>

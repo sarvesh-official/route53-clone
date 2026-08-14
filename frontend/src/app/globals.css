@@ -310,29 +310,26 @@ body [class*="awsui_button_"][class*="awsui_variant-primary"]:hover {
 }
 
 /* Force all Cloudscape links to use our app blue, not Cloudscape's default.
-   Exclude sidebar links — those get hover/active styling below. */
-body [class*="awsui_link_"][class*="awsui_variant-primary"],
-body [class*="awsui_link_"][class*="awsui_variant-secondary"],
-body [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
+   Exclude sidebar links, button-as-link elements, and active links. */
+body [class*="awsui_link_"]:not([class*="awsui_button_"]):not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
   color: var(--r53-light-accent) !important;
 }
-.awsui-dark-mode [class*="awsui_link_"][class*="awsui_variant-primary"],
-.awsui-dark-mode [class*="awsui_link_"][class*="awsui_variant-secondary"],
-.awsui-dark-mode [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
+.awsui-dark-mode [class*="awsui_link_"]:not([class*="awsui_button_"]):not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
   color: var(--r53-dark-accent) !important;
 }
 
-/* Sidebar links: only blue on hover or when active */
-[class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]) {
+/* Sidebar links: only blue on hover or when active.
+   Extra :not() selectors to match the general link rule's specificity. */
+body [class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
   color: inherit !important;
 }
-[class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]):hover {
+body [class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]):hover {
   color: var(--r53-light-accent) !important;
 }
-.awsui-dark-mode [class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]) {
+.awsui-dark-mode [class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
   color: inherit !important;
 }
-.awsui-dark-mode [class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]):hover {
+.awsui-dark-mode [class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]):hover {
   color: var(--r53-dark-accent) !important;
 }
 
