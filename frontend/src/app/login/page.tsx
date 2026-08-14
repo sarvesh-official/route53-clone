@@ -1,16 +1,33 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
+import { FeedbackModal } from "@/features/auth/feedback-modal";
 import { LoginForm } from "@/features/auth/login-form";
 import { useAuth } from "@/providers/auth-provider";
 
-const FONT = '"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif';
+const MARKETING_IMAGES = [
+  "/assets/marketing/aws-marketing-01.png",
+  "/assets/marketing/aws-marketing-02.png",
+  "/assets/marketing/aws-marketing-03.png",
+  "/assets/marketing/aws-marketing-04.png",
+  "/assets/marketing/aws-marketing-05.png",
+  "/assets/marketing/aws-marketing-06.jpeg",
+  "/assets/marketing/aws-marketing-07.png",
+  "/assets/marketing/aws-marketing-08.jpeg",
+  "/assets/marketing/aws-marketing-09.jpeg",
+];
+
+function randomMarketingImg() {
+  return MARKETING_IMAGES[Math.floor(Math.random() * MARKETING_IMAGES.length)];
+}
 
 export default function LoginPage() {
   const router = useRouter();
   const { status } = useAuth();
+  const [marketingImg] = useState(randomMarketingImg);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated") router.replace("/dashboard");
@@ -18,118 +35,135 @@ export default function LoginPage() {
 
   if (status === "loading" || status === "authenticated") {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-          backgroundColor: "#fafafa",
-        }}
-      >
-        <div
-          style={{
-            width: 24,
-            height: 24,
-            border: "3px solid #e9ebed",
-            borderTopColor: "#ff9900",
-            borderRadius: "50%",
-            animation: "r53-spin 0.8s linear infinite",
-          }}
-        />
+      <div className="flex h-screen items-center justify-center bg-[#fafafa]">
+        <div className="h-6 w-6 animate-spin rounded-full border-3 border-[#e9ebed] border-t-[#ff9900]" />
         <style>{`@keyframes r53-spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: "#fafafa",
-        fontFamily: FONT,
-        color: "#0f141a",
-      }}
-    >
-      {/* Top bar: AWS logo left, utility buttons right */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "12px 24px",
-        }}
-      >
+    <div className="flex min-h-screen flex-col bg-[#fafafa] font-sans text-[#0f141a] md:bg-[#fafafa] md:[background-image:url(/assets/aws-bg-left.png),url(/assets/aws-bg-right.png)] md:[background-position:left_bottom,right_bottom] md:[background-repeat:no-repeat]">
+      {/* Desktop only — hidden on mobile, links move to bottom */}
+      <div className="hidden justify-end px-5 pt-5 md:flex">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setFeedbackOpen(true)}
+            className="flex h-8 cursor-pointer appearance-none items-center rounded-full border-2 border-transparent bg-transparent px-4 no-underline transition-colors hover:bg-[#e9f3ff]"
+            style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#0a3a8f")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#006ce0")}
+          >
+            Provide feedback
+          </button>
+          <a
+            href="https://github.com/sarvesh-official/route53-clone"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-7 cursor-pointer appearance-none items-center rounded-full border-none bg-transparent px-4 no-underline"
+            style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+          >
+            Source Code
+          </a>
+          <a
+            href="https://github.com/sarvesh-official/route53-clone#readme"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-7 cursor-pointer appearance-none items-center rounded-full border-none bg-transparent px-4 no-underline"
+            style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+          >
+            English
+          </a>
+        </div>
+      </div>
+
+      {/* Logo */}
+      <div className="flex justify-center pt-5 md:pt-5">
         <a href="/login" onClick={(e) => e.preventDefault()}>
           <img
             src="/assets/aws-logo-login.png"
             alt="Amazon Web Services logo"
-            style={{ height: 51, width: 84 }}
+            className="h-12.75 w-21"
           />
         </a>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <button
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: 14,
-              fontFamily: FONT,
-              color: "#0f141a",
-              padding: "4px 8px",
-            }}
-          >
-            English
-          </button>
-        </div>
       </div>
 
-      {/* Content row: form (340px) + marketing banner (570px) */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 24,
-          flex: 1,
-          padding: "48px 24px",
-          justifyContent: "center",
-          alignItems: "flex-start",
-        }}
-      >
-        {/* Form column */}
-        <div style={{ width: 340, flexShrink: 0 }}>
-          <LoginForm />
+      {/* Row on desktop, stacked on mobile */}
+      <div className="flex flex-1 flex-col items-center justify-center gap-6 px-4 pt-8 md:flex-row md:items-start md:px-0">
+        <div className="w-full max-w-[340px] md:w-85 md:shrink-0">
+          <div className="rounded-2xl border border-[#d5dbdb] bg-white px-6 pb-6 pt-4">
+            <LoginForm />
+          </div>
+          <p
+            className="mt-4 px-2 text-center text-xs leading-[18px]"
+            style={{ color: "#72747d", fontWeight: 500 }}
+          >
+            By continuing, you acknowledge this is a demo application. No real
+            AWS credentials are used. Authentication is mocked. See the{" "}
+            <a
+              href="https://github.com/sarvesh-official/route53-clone#readme"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#1C7AE3", textDecoration: "underline", fontWeight: 500 }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#0f141a")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#1C7AE3")}
+            >
+              project documentation
+            </a>{" "}
+            for details.
+          </p>
         </div>
 
-        {/* Marketing banner */}
-        <div style={{ flexShrink: 0 }}>
+        {/* Hidden on mobile — AWS does the same */}
+        <div className="hidden shrink-0 md:block" data-testid="marketing_image_container">
           <img
-            src="/assets/marketing-banner.png"
+            src={marketingImg}
             alt="Amazon Web Services Marketing"
-            style={{
-              width: 570,
-              height: 450,
-              borderRadius: 16,
-              objectFit: "cover",
-            }}
+            width={570}
+            height={450}
+            className="h-112.5 w-142.5 object-cover"
           />
         </div>
       </div>
 
       {/* Copyright footer */}
-      <div
-        style={{
-          fontSize: 12,
-          color: "#687078",
-          fontFamily: FONT,
-          textAlign: "center",
-          padding: "16px 24px",
-        }}
-      >
+      <div className="px-6 py-4 text-center text-xs text-[#687078] font-sans">
         (Clone) 2026 Route 53 Clone. Built for Scaler AI Labs assignment.
       </div>
+
+      {/* Mobile only — utility links at bottom, AWS does the same */}
+      <div className="flex flex-col items-center gap-3 px-4 pb-6 md:hidden">
+        <button
+          onClick={() => setFeedbackOpen(true)}
+          className="cursor-pointer appearance-none border-none bg-transparent no-underline"
+          style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+        >
+          Provide feedback
+        </button>
+        <a
+          href="https://github.com/sarvesh-official/route53-clone"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="cursor-pointer appearance-none border-none bg-transparent no-underline"
+          style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+        >
+          Source Code
+        </a>
+        <a
+          href="https://github.com/sarvesh-official/route53-clone#readme"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="cursor-pointer appearance-none border-none bg-transparent no-underline"
+          style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+        >
+          English
+        </a>
+      </div>
+
+      <FeedbackModal
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+      />
     </div>
   );
 }
