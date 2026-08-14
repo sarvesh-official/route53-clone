@@ -1,3 +1,5 @@
+/* Custom global styles (Tailwind utilities are loaded via /tailwind.css link) */
+
 /* Amazon Ember is AWS's proprietary font. We use the same fallback stack
    that AWS itself uses on its console pages. */
 body {
