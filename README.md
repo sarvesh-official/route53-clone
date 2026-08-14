@@ -7,8 +7,8 @@
 <p align="center">A high-fidelity clone of the AWS Route 53 console — built to feel like the real product, not a generic CRUD app.</p>
 
 <p align="center">
-  <strong>Frontend:</strong> <a href="#">Vercel deploy link</a><br/>
-  <strong>API Docs:</strong> <a href="#">Render deploy link</a>/docs
+  <strong>Live:</strong> <a href="https://route53.sarvee.in">route53.sarvee.in</a><br/>
+  <strong>API Docs:</strong> <a href="https://route53-sonn.onrender.com/docs">route53-sonn.onrender.com/docs</a>
 </p>
 
 ---
@@ -277,7 +277,19 @@ Full interactive docs at `/docs` (Swagger UI) when the backend is running.
 
 ---
 
-## Run it locally
+## Test Account
+
+Pre-seeded with 2 hosted zones (`example.com.`, `staging.example.com.`) and 12 DNS records (A, AAAA, CNAME, MX, TXT, NS, SOA).
+
+| Email | Password |
+|---|---|
+| demo@example.com | demo1234 |
+
+You can also register a new account from the signup page — it creates a real session and works immediately.
+
+---
+
+## Local Setup
 
 ### Backend
 
@@ -310,13 +322,14 @@ Backend reads from `backend/.env` (see `backend/.env.example`). All have default
 
 Frontend reads `NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:8000`). See `frontend/.env.example`.
 
-### Docker
+### Deployment
 
-```bash
-docker-compose up --build
-# Backend at http://localhost:8000
-# Frontend at http://localhost:3000
-```
+The app is deployed at:
+
+- **Frontend:** [route53.sarvee.in](https://route53.sarvee.in) (Vercel)
+- **Backend:** [route53-sonn.onrender.com](https://route53-sonn.onrender.com) (Render, free tier)
+
+Backend uses a `Procfile` that runs Alembic migrations, seeds demo data, then starts uvicorn. A GitHub Actions cron pings the health endpoint every 10 minutes to prevent the free tier from sleeping.
 
 ---
 
@@ -360,21 +373,36 @@ frontend/
 
 ---
 
-## Engineering Decisions
+## Bugs I actually fixed
 
-A few decisions worth explaining:
+These tell you more about the codebase than a feature list does.
 
-**Cloudscape over custom components.** I used AWS's own Cloudscape Design System instead of building tables and forms from scratch. Cloudscape is the exact library AWS uses in their console — the Table, Form, Modal, Pagination, Flashbar, and TopNavigation components are the real thing. This meant the UI looks right without pixel-pushing CSS, but it also meant working within Cloudscape's constraints (icon names, layout patterns, theming tokens).
+**Top nav didn't match AWS layout.** The initial top nav used a generic header with a logo and links. Rebuilt it with Cloudscape's `TopNavigation` component and the actual AWS console structure — services dropdown, search bar, region selector, account menu with dark mode toggle. Had to work around Cloudscape's fixed icon set and the fact that `TopNavigation` expects an `i18nStrings` prop that isn't well documented.
 
-**Opaque session tokens, not JWT.** Stateless JWTs can't be revoked. I stored session tokens in a `user_sessions` table so logout actually deletes the row and invalidates the token. The extra DB lookup per request is worth it for a demo where reviewers log in and out.
+**Login page was a single form.** AWS uses a two-step sign-in flow — email first, then password. Rebuilt the login form to match: step 1 asks for email, step 2 shows the password field with the email above it. The "Create account" link goes to the signup page, which mirrors AWS's actual signup flow.
 
-**Per-type DNS record validation.** Each record type has its own validator — A records check IPv4 format, MX records parse `priority hostname`, CAA records validate `flags tag value`, etc. CNAME at the zone apex is rejected. This matches Route 53's actual validation behavior.
+**Theme toggle flashed the wrong colors on hard refresh.** `ThemeProvider` set `.dark` on `<html>` inside `useEffect` — after the first paint. Fixed with a synchronous inline `<script>` in `<head>` that reads `localStorage` before React renders. Same technique `next-themes` uses.
 
-**Auto-created NS and SOA records.** When a zone is created, the backend automatically creates the apex NS and SOA records via a zone bootstrap service. These are read-only in the UI — users can't delete or edit them, same as real Route 53.
+**Theme didn't sync across tabs.** Switching theme in one tab didn't update others. Replaced `useState` with `useSyncExternalStore` listening to `storage` events. Now all open tabs update instantly.
 
-**Route 53-style IDs.** Zone IDs are `Z` + 20 base32 characters, record IDs are `R` + 20 base32 characters. This matches the format AWS uses (`Z1D623PEXAMPLE`), making the clone feel more authentic.
+**Edit button on hosted zones table was disabled.** The list page had View and Edit buttons greyed out because the edit page didn't exist. Built the edit page at `/hosted-zones/[zoneId]/edit` and wired the button to navigate there with the selected zone ID.
 
-**Repository pattern for DB access.** Only the repository layer touches SQLAlchemy sessions. Services own business logic and commits. Routers are thin HTTP wrappers. This separation kept each file under ~150 lines and made the backend easy to test.
+**Vercel build failed — `@tailwindcss/postcss` not found.** Tailwind v4 was in `devDependencies` but Vercel doesn't install devDependencies in production. Moved `tailwindcss` and `@tailwindcss/postcss` to `dependencies` and added a `tw:gen` script that runs before `next build` to generate the Tailwind CSS file.
+
+**Render deployed Python 3.14 instead of 3.11.** Free tier defaults to the latest Python. `pydantic-core` wheels weren't available for 3.14 yet. Fixed by adding `.python-version` with `3.11.9` (which Render reads) and unpinning `pydantic` to allow compatible wheels.
+
+**Render went cold between requests.** Free tier suspends after 15 minutes idle. Fixed with a GitHub Actions cron that pings `/api/health` every 10 minutes.
+
+---
+
+## Assumptions
+
+- **No actual DNS resolution.** Records are stored and displayed but don't propagate anywhere. This is a UX clone, not a DNS server. Plugging in a real resolver would require a DNS backend like PowerDNS or CoreDNS.
+- **SQLite over Postgres.** Zero infrastructure for local dev. The SQLAlchemy layer is DB-agnostic — switching is a one-line connection string change. The tradeoff is no concurrent writes at scale.
+- **Mocked auth, not AWS IAM.** Sessions are opaque tokens in a `user_sessions` table, not JWTs. Logout deletes the row. The extra DB lookup per request is worth it for a demo where reviewers log in and out.
+- **Mocked IAM, Accounts, Organizations, Billing.** These endpoints return static placeholder data. The real AWS APIs require SigV4 signing and an AWS account — out of scope for a 24-hour assignment.
+- **Cloudscape over custom components.** Using AWS's own design system meant the UI looks right without pixel-pushing CSS. The tradeoff is working within Cloudscape's constraints — fixed icon set, layout patterns, and theming tokens that don't always map cleanly to Tailwind.
+- **BIND import is parser-only.** The import handles `$ORIGIN`, `@`, comments, and common record types. It skips duplicates rather than merging. A full BIND parser would handle `$INCLUDE`, `$TTL`, and quoted strings — overkill for this demo.
 
 ---
 

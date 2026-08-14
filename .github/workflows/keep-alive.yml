@@ -11,4 +11,4 @@ jobs:
     steps:
       - run: |
           date
-          curl -v https://route53-clone.onrender.com/api/health
+          curl -v https://route53-sonn.onrender.com/api/health
