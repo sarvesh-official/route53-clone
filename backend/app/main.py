@@ -4,8 +4,6 @@ Run locally:
     cd backend/
     .venv/bin/uvicorn app.main:app --reload --port 8000
 """
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,26 +24,11 @@ from app.routers.zone_import import router as zone_import_router
 from app.routers.zone_export import router as zone_export_router
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Render's free tier has an ephemeral filesystem — the SQLite DB is wiped
-    # on every deploy/spin-up. Recreate tables and seed demo data on startup
-    # so the app always has data to show.
-    from app.core.database import engine
-    from app.models.base import Base
-    from app.seed import seed
-
-    Base.metadata.create_all(engine)
-    seed()
-    yield
-
-
 def create_app() -> FastAPI:
     application = FastAPI(
         title="Route 53 Clone API",
         version="1.0.0",
         description="Backend for AWS Route 53 console clone.",
-        lifespan=lifespan,
     )
 
     application.add_middleware(
