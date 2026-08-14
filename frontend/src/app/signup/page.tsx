@@ -125,15 +125,16 @@ export default function SignupPage() {
               Manage your DNS with Route 53 Clone
             </h2>
             <p className="text-sm leading-5 text-[#424650]">
-              Create hosted zones, DNS records, traffic policies,<br />
-              and health checks. Built with Next.js and Cloudscape.
+              Create hosted zones, DNS records, and traffic policies.<br />
+              Monitor health checks and route traffic globally.<br />
+              Built with Next.js and Cloudscape Design.
             </p>
             <img
               src="/assets/free-tier-rocket.png"
               alt="Route 53 Clone"
-              width={220}
-              height={146}
-              className="mt-5 mx-auto h-auto w-[220px]"
+              width={280}
+              height={186}
+              className="mt-5 mx-auto h-auto w-[280px]"
             />
           </div>
 
@@ -156,7 +157,7 @@ export default function SignupPage() {
                   className="text-2xl font-semibold leading-7"
                   style={{ color: c.lightTextPrimary }}
                 >
-                  Create your account
+                  Sign up for AWS
                 </h1>
 
                 {error && (
@@ -321,39 +322,37 @@ export default function SignupPage() {
 
       {/* Footer */}
       <div
-        className="mt-8 px-6 py-5 sm:px-10"
+        className="mt-8 px-6 py-5 text-center"
       >
-        <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-          <div className="flex items-center gap-3 text-sm">
-            <a
-              href="https://github.com/sarvesh-official/route53-clone"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-0.5 font-normal no-underline"
-              style={{ fontSize: "14px", color: c.darkAccentHover }}
-            >
-              Source Code
-              {externalIcon}
-            </a>
-            <span className="text-[#d5dbdb]">|</span>
-            <a
-              href="https://github.com/sarvesh-official/route53-clone#readme"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-0.5 font-normal no-underline"
-              style={{ fontSize: "14px", color: c.darkAccentHover }}
-            >
-              README
-              {externalIcon}
-            </a>
-          </div>
-          <p
-            className="text-xs"
-            style={{ color: c.lightTextMuted }}
+        <div className="flex items-center justify-center gap-3 text-sm">
+          <a
+            href="https://github.com/sarvesh-official/route53-clone"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-0.5 font-normal no-underline"
+            style={{ fontSize: "14px", color: c.darkAccentHover }}
           >
-            (Clone) Route 53 Clone. Built for Scaler AI Labs assignment.
-          </p>
+            Source Code
+            {externalIcon}
+          </a>
+          <span className="text-[#d5dbdb]">|</span>
+          <a
+            href="https://github.com/sarvesh-official/route53-clone#readme"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-0.5 font-normal no-underline"
+            style={{ fontSize: "14px", color: c.darkAccentHover }}
+          >
+            Documentation
+            {externalIcon}
+          </a>
         </div>
+        <p
+          className="mt-3 text-xs"
+          style={{ color: c.lightTextMuted }}
+        >
+          (Clone) Route 53 Clone. Built for Scaler AI Labs assignment.
+        </p>
       </div>
     </div>
   );
