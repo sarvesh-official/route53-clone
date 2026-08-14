@@ -13,6 +13,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { recordsApi } from "@/lib/api/dns-records";
 import { isApiError } from "@/lib/api/errors";
+import { displayDomain } from "@/lib/format/dns";
 import { useNotifications } from "@/providers/notifications-provider";
 import type {
   DnsRecord,
@@ -26,6 +27,10 @@ import type { HostedZone } from "@/types/hosted-zone";
 import { RECORD_COLUMNS } from "./columns";
 import { RecordModal } from "./record-modal";
 import { ImportModal } from "./import-modal";
+
+const c = {
+  lightTextMuted: "var(--r53-light-text-muted)",
+} as const;
 
 const PAGE_SIZE = 25;
 const TYPE_OPTIONS = [
@@ -242,7 +247,7 @@ export function RecordsTable({ zone }: { zone: HostedZone }) {
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative w-full sm:w-[400px]">
-              <span className="pointer-events-none absolute left-3 top-1/2 z-[1] -translate-y-1/2 text-sm text-[#687078]">
+              <span className="pointer-events-none absolute left-3 top-1/2 z-[1] -translate-y-1/2 text-sm" style={{ color: c.lightTextMuted }}>
                 <svg
                   width="14"
                   height="14"
@@ -385,7 +390,7 @@ export function RecordsTable({ zone }: { zone: HostedZone }) {
         visible={modalState.visible}
         mode={modalState.mode}
         record={modalState.record}
-        zoneName={zone.name}
+        zoneName={displayDomain(zone.name)}
         onDismiss={() =>
           setModalState({ mode: modalState.mode, visible: false, record: null })
         }
@@ -423,7 +428,7 @@ export function RecordsTable({ zone }: { zone: HostedZone }) {
       >
         <Box variant="p">
           Are you sure you want to delete the record{" "}
-          <strong>{deleteTarget?.name}</strong> ({deleteTarget?.type})?
+          <strong>{deleteTarget ? displayDomain(deleteTarget.name) : ""}</strong> ({deleteTarget?.type})?
         </Box>
       </Modal>
 

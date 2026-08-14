@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 
 import { zonesApi } from "@/lib/api/hosted-zones";
 import { isApiError } from "@/lib/api/errors";
+import { displayDomain } from "@/lib/format/dns";
 import { useNotifications } from "@/providers/notifications-provider";
 
 export default function EditHostedZonePage() {
@@ -40,7 +41,7 @@ export default function EditHostedZonePage() {
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ["zones"] });
       queryClient.invalidateQueries({ queryKey: ["zone", params.zoneId] });
-      notify({ type: "success", content: `Hosted zone "${updated.name}" updated successfully.` });
+      notify({ type: "success", content: `Hosted zone "${displayDomain(updated.name)}" updated successfully.` });
       router.push("/hosted-zones");
     },
     onError: (err) => {
@@ -95,7 +96,7 @@ export default function EditHostedZonePage() {
           >
             <SpaceBetween size="m">
               <FormField label="Domain name">
-                <Input value={zone.name} disabled />
+                <Input value={displayDomain(zone.name)} disabled />
               </FormField>
 
               <FormField label="Type">

@@ -1,18 +1,27 @@
 "use client";
 
+import Alert from "@cloudscape-design/components/alert";
 import Box from "@cloudscape-design/components/box";
 import Button from "@cloudscape-design/components/button";
 import ColumnLayout from "@cloudscape-design/components/column-layout";
 import Container from "@cloudscape-design/components/container";
+import FormField from "@cloudscape-design/components/form-field";
 import Header from "@cloudscape-design/components/header";
 import Link from "@cloudscape-design/components/link";
+import Pagination from "@cloudscape-design/components/pagination";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Table from "@cloudscape-design/components/table";
+import TextFilter from "@cloudscape-design/components/text-filter";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { statsApi } from "@/lib/api/stats";
 import { ActivityFeed } from "@/features/dashboard/activity-feed";
+
+const c = {
+  lightInputBorder: "var(--r53-light-input-border)",
+} as const;
 
 interface NotificationItem {
   resource: string;
@@ -26,114 +35,176 @@ export default function DashboardPage() {
     queryKey: ["stats"],
     queryFn: statsApi.get,
   });
+  const [domainInput, setDomainInput] = useState("");
+  const [domainCheckMsg, setDomainCheckMsg] = useState<null | { type: "success" | "info"; text: string }>(null);
+  const [notifFilter, setNotifFilter] = useState("");
+
+  function handleCheckDomain() {
+    if (!domainInput.trim()) return;
+    setDomainCheckMsg({
+      type: "info",
+      text: `Domain "${domainInput.trim()}" availability check is not supported in this clone. Domain registration is a mocked feature.`,
+    });
+  }
 
   return (
     <SpaceBetween size="l">
-      <Box padding={{ top: "m", horizontal: "l" }}>
-        <Header variant="h1">
+      {/* Page title with Info link */}
+      <Box padding={{ top: "xs", horizontal: "m" }}>
+        <Header variant="h1" info={<Link variant="info">Info</Link>}>
           Route 53 Dashboard
         </Header>
       </Box>
 
-      {/* 4 product cards */}
-      <Box padding={{ horizontal: "l" }}>
-        <ColumnLayout columns={4} minColumnWidth={200} variant="text-grid">
-          <Container>
-            <Header variant="h3">DNS management</Header>
-            <Box variant="p">
-              A hosted zone tells Route 53 how to respond to DNS queries for a domain such as example.com.
+      {/* Resource statistics widget - single container with 4 columns */}
+      <Box padding={{ horizontal: "m" }}>
+        <Container>
+          <ColumnLayout columns={4} minColumnWidth={200} variant="text-grid">
+            {/* DNS management */}
+            <Box textAlign="center">
+              <Header variant="h3">DNS management</Header>
+              <Box variant="p" padding={{ bottom: "s" }}>
+                A hosted zone tells Route 53 how to respond to DNS queries for a domain such as example.com.
+              </Box>
+              <Button
+                href="/hosted-zones"
+                onFollow={(e) => { e.preventDefault(); router.push("/hosted-zones"); }}
+              >
+                Create hosted zone
+              </Button>
             </Box>
-            <Link onFollow={(e) => { e.preventDefault(); router.push("/hosted-zones"); }}>
-              Create hosted zone
-            </Link>
-          </Container>
-          <Container>
-            <Header variant="h3">Availability monitoring</Header>
-            <Box variant="p">
-              Health checks monitor your applications and web resources, and direct DNS queries to healthy resources.
+            {/* Availability monitoring */}
+            <Box textAlign="center">
+              <Header variant="h3">Availability monitoring</Header>
+              <Box variant="p" padding={{ bottom: "s" }}>
+                Health checks monitor your applications and web resources, and direct DNS queries to healthy resources.
+              </Box>
+              <Button
+                href="/health-checks"
+                onFollow={(e) => { e.preventDefault(); router.push("/health-checks"); }}
+              >
+                Create health check
+              </Button>
             </Box>
-            <Link onFollow={(e) => { e.preventDefault(); router.push("/health-checks"); }}>
-              Create health check
-            </Link>
-          </Container>
-          <Container>
-            <Header variant="h3">Traffic management</Header>
-            <Box variant="p">
-              A visual tool that lets you easily create policies for multiple endpoints in complex configurations.
+            {/* Traffic management */}
+            <Box textAlign="center">
+              <Header variant="h3">Traffic management</Header>
+              <Box variant="p" padding={{ bottom: "s" }}>
+                A visual tool that lets you easily create policies for multiple endpoints in complex configurations.
+              </Box>
+              <Button
+                href="/traffic-policies"
+                onFollow={(e) => { e.preventDefault(); router.push("/traffic-policies"); }}
+              >
+                Create policy
+              </Button>
             </Box>
-            <Link onFollow={(e) => { e.preventDefault(); router.push("/traffic-policies"); }}>
-              Create policy
-            </Link>
-          </Container>
-          <Container>
-            <Header variant="h3">Domain registration</Header>
-            <Box variant="p">
-              A domain is the name, such as example.com, that your users use to access your application.
+            {/* Domain registration */}
+            <Box textAlign="center">
+              <Header variant="h3">Domain registration</Header>
+              <Box variant="p" padding={{ bottom: "s" }}>
+                A domain is the name, such as example.com, that your users use to access your application.
+              </Box>
+              <Button
+                href="/domains/registered"
+                onFollow={(e) => { e.preventDefault(); router.push("/domains/registered"); }}
+              >
+                Register domain
+              </Button>
             </Box>
-            <Link onFollow={(e) => { e.preventDefault(); router.push("/domains/registered"); }}>
-              Register domain
-            </Link>
-          </Container>
-        </ColumnLayout>
+          </ColumnLayout>
+        </Container>
       </Box>
 
-      {/* Register domain + Notifications */}
-      <Box padding={{ horizontal: "l" }}>
-        <ColumnLayout columns={2} minColumnWidth={300} variant="text-grid">
-          <Container header={<Header variant="h2">Register domain</Header>}>
-            <SpaceBetween size="m">
-              <Box variant="p">
-                Find and register an available domain, or{" "}
-                <Link href="https://console.aws.amazon.com/route53/home?#DomainTransfer:" external>
-                  Transfer Domain to Route 53
-                </Link>{" "}
-                transfer your existing domains to Route 53.
+      {/* Register domain - full width */}
+      <Box padding={{ horizontal: "m" }}>
+        <Container header={<Header variant="h2">Register domain</Header>}>
+          <SpaceBetween size="m">
+            <Box variant="p">
+              Find and register an available domain, or{" "}
+              <Link onFollow={(e) => { e.preventDefault(); router.push("/domains/registered"); }}>
+                transfer your existing domains
+              </Link>{" "}
+              to Route 53.
+            </Box>
+            <FormField
+              constraintText="Each label (each part between dots) can be up to 63 characters long and must start with a-z or 0-9. Maximum length: 255 characters, including dots. Valid characters: a-z, 0-9, and - (hyphen)"
+            >
+              <input
+                type="text"
+                placeholder="Enter a domain name"
+                value={domainInput}
+                onChange={(e) => setDomainInput(e.target.value)}
+                className="h-8 w-full rounded-lg border px-3 py-[5px] text-sm outline-none"
+                style={{ borderColor: c.lightInputBorder }}
+                aria-label="Find and register an available domain."
+              />
+            </FormField>
+            <Button onClick={handleCheckDomain}>Check</Button>
+            {domainCheckMsg && (
+              <Box margin={{ top: "s", bottom: "s" }}>
+                <Alert type={domainCheckMsg.type}>{domainCheckMsg.text}</Alert>
               </Box>
-              <Box>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Enter a domain name"
-                    className="h-8 flex-1 rounded-lg border border-[#8c8c94] px-3 py-[5px] text-sm outline-none"
-                  />
-                  <Button>Check</Button>
-                </div>
-                <Box variant="small" color="text-body-secondary">
-                  Each label (each part between dots) can be up to 63 characters long and must start with a-z or 0-9. Maximum length: 255 characters, including dots. Valid characters: a-z, 0-9, and - (hyphen)
-                </Box>
-              </Box>
-            </SpaceBetween>
-          </Container>
-          <Container
-            header={
-              <Header
-                variant="h2"
-                actions={<Button iconName="refresh" variant="icon" ariaLabel="Refresh notifications">Refresh</Button>}
-              >
-                Notifications
-              </Header>
-            }
-          >
-            <Table<NotificationItem>
-              columnDefinitions={[
-                { id: "resource", header: "Resource", cell: (item) => item.resource },
-                { id: "status", header: "Status", cell: (item) => item.status },
-                { id: "lastUpdate", header: "Last update", cell: (item) => item.lastUpdate },
-              ]}
-              items={[]}
-              empty={
-                <Box textAlign="center" color="text-body-secondary">
-                  No notifications to display
-                </Box>
-              }
+            )}
+          </SpaceBetween>
+        </Container>
+      </Box>
+
+      {/* Notifications table - full width with text filter and pagination */}
+      <Box padding={{ horizontal: "m" }}>
+        <Table<NotificationItem>
+          variant="container"
+          columnDefinitions={[
+            { id: "resource", header: "Resource", cell: (item) => item.resource, width: 250 },
+            { id: "status", header: "Status", cell: (item) => item.status, width: 350 },
+            { id: "lastUpdate", header: "Last update", cell: (item) => item.lastUpdate, sortingField: "last-update" },
+          ]}
+          items={[]}
+          loadingText="Loading notifications"
+          trackBy="resource"
+          empty={
+            <Box textAlign="center" color="text-body-secondary">
+              No notifications to display
+            </Box>
+          }
+          filter={
+            <TextFilter
+              filteringText={notifFilter}
+              filteringPlaceholder="Find notifications"
+              onChange={({ detail }) => setNotifFilter(detail.filteringText)}
             />
-          </Container>
-        </ColumnLayout>
+          }
+          header={
+            <Header
+              variant="h2"
+              actions={
+                <Button
+                  iconName="refresh"
+                  variant="icon"
+                  ariaLabel="Refresh notifications"
+                />
+              }
+            >
+              Notifications
+            </Header>
+          }
+          pagination={
+            <Pagination
+              currentPageIndex={1}
+              pagesCount={1}
+              ariaLabels={{
+                nextPageLabel: "Next page",
+                previousPageLabel: "Previous page",
+                pageLabel: (pageNumber) => `Page ${pageNumber} of all pages`,
+              }}
+            />
+          }
+        />
       </Box>
 
       {/* Stats */}
       {stats && (
-        <Box padding={{ horizontal: "l", bottom: "l" }}>
+        <Box padding={{ horizontal: "m" }}>
           <Container header={<Header variant="h2">Your Route 53 resources</Header>}>
             <ColumnLayout columns={4} minColumnWidth={120} variant="text-grid">
               <Box>
@@ -158,32 +229,32 @@ export default function DashboardPage() {
       )}
 
       {/* Activity feed */}
-      <Box padding={{ horizontal: "l", bottom: "l" }}>
+      <Box padding={{ horizontal: "m" }}>
         <Container header={<Header variant="h2">Record creation activity (last 7 days)</Header>}>
           <ActivityFeed />
         </Container>
       </Box>
 
-      {/* More resources */}
-      <Box padding={{ horizontal: "l", bottom: "l" }}>
+      {/* More resources - list with separators */}
+      <Box padding={{ horizontal: "m" }}>
         <Container header={<Header variant="h2">More resources</Header>}>
-          <SpaceBetween size="m">
-            <Link href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html" external>Documentation</Link>
-            <Link href="https://docs.aws.amazon.com/Route53/latest/APIReference/" external>API reference</Link>
-            <Link href="https://aws.amazon.com/route53/faqs/" external>FAQs</Link>
-            <Link href="https://repost.aws/tags/TAO7Z4bI5hQ5a2VgZJyYyZ5g/aws-route-53-dns-and-health-checks" external>Forum - DNS and health checks</Link>
-            <Link href="https://repost.aws/tags/TAO7Z4bI5hQ5a2VgZJyYyZ5g/aws-route-53-domain-name-registration" external>Forum - Domain name registration</Link>
-            <Link href="https://console.aws.amazon.com/support/home#/case/create?issueType=service-limit-increase" external>Request a limit increase</Link>
-          </SpaceBetween>
+          <ul className="home-page__list-separator" aria-label="Additional resource links">
+            <li><Link variant="secondary" onFollow={(e) => { e.preventDefault(); router.push("/health-checks"); }}>Documentation</Link></li>
+            <li><Link variant="secondary" onFollow={(e) => { e.preventDefault(); router.push("/health-checks"); }}>API reference</Link></li>
+            <li><Link variant="secondary" onFollow={(e) => { e.preventDefault(); router.push("/health-checks"); }}>FAQs</Link></li>
+            <li><Link variant="secondary" onFollow={(e) => { e.preventDefault(); router.push("/health-checks"); }}>Forum - DNS and health checks</Link></li>
+            <li><Link variant="secondary" onFollow={(e) => { e.preventDefault(); router.push("/domains/registered"); }}>Forum - Domain name registration</Link></li>
+            <li><Link variant="secondary" onFollow={(e) => { e.preventDefault(); router.push("/health-checks"); }}>Request a limit increase</Link></li>
+          </ul>
         </Container>
       </Box>
 
       {/* Service health */}
-      <Box padding={{ horizontal: "l", bottom: "l" }}>
+      <Box padding={{ horizontal: "m", bottom: "m" }}>
         <Container header={<Header variant="h2">Service health</Header>}>
           <Box variant="p">
             To view the current status of Route 53, see the{" "}
-            <Link href="https://health.aws.amazon.com/health/current" external>
+            <Link variant="secondary" onFollow={(e) => { e.preventDefault(); router.push("/health-checks"); }}>
               AWS Service Health Dashboard
             </Link>
             .

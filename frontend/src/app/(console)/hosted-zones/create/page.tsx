@@ -18,6 +18,10 @@ import { isApiError } from "@/lib/api/errors";
 import { useNotifications } from "@/providers/notifications-provider";
 import type { ZoneType } from "@/types/hosted-zone";
 
+const c = {
+  lightTextMuted: "var(--r53-light-text-muted)",
+} as const;
+
 export default function CreateHostedZonePage() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -173,7 +177,7 @@ export default function CreateHostedZonePage() {
                 <Box variant="p">No tags associated with the resource.</Box>
                 <Box>
                   <Button>Add tag</Button>
-                  <span style={{ marginLeft: 8, fontSize: 12, color: "#687078" }}>
+                  <span style={{ marginLeft: 8, fontSize: 12, color: c.lightTextMuted }}>
                     You can add up to 50 more tags.
                   </span>
                 </Box>

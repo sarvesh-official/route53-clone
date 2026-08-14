@@ -15,8 +15,14 @@ import { useState } from "react";
 
 import { zonesApi } from "@/lib/api/hosted-zones";
 import { isApiError } from "@/lib/api/errors";
+import { displayDomain } from "@/lib/format/dns";
 import { useNotifications } from "@/providers/notifications-provider";
 import type { HostedZone } from "@/types/hosted-zone";
+
+const c = {
+  lightTextMuted: "var(--r53-light-text-muted)",
+  lightAccent: "var(--r53-light-accent)",
+} as const;
 
 export default function HostedZonesPage() {
   const queryClient = useQueryClient();
@@ -113,7 +119,7 @@ export default function HostedZonesPage() {
           <SpaceBetween size="l">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="relative w-full sm:w-[648px]">
-                <span className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-[#687078]">
+                <span className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center" style={{ color: c.lightTextMuted }}>
                   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
                     <path
                       d="m11 11 4 4M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10Z"
@@ -158,8 +164,8 @@ export default function HostedZonesPage() {
                   id: "name",
                   header: "Hosted zone name",
                   cell: (item: HostedZone) => (
-                    <Link href={`/hosted-zones/${item.id}`} style={{ color: "#006ce0" }}>
-                      {item.name}
+                    <Link href={`/hosted-zones/${item.id}`} style={{ color: c.lightAccent }}>
+                      {displayDomain(item.name)}
                     </Link>
                   ),
                   sortingField: "name",

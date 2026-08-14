@@ -1,9 +1,16 @@
 "use client";
 
 import BreadcrumbGroup from "@cloudscape-design/components/breadcrumb-group";
+import Button from "@cloudscape-design/components/button";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useBreadcrumbLabels } from "@/providers/breadcrumb-provider";
+
+/* CSS variable shortcuts — see src/app/globals.css :root */
+const c = {
+  lightBreadcrumbBg: "var(--r53-light-breadcrumb-bg)",
+  lightBorder: "var(--r53-light-border)",
+} as const;
 
 interface Crumb {
   text: string;
@@ -26,9 +33,11 @@ function buildCrumbs(pathname: string, labels: Record<string, string>): Crumb[] 
 interface ToolbarProps {
   onToggleNav: () => void;
   onToggleTools: () => void;
+  navOpen: boolean;
+  toolsOpen: boolean;
 }
 
-export function AppToolbar({ onToggleNav, onToggleTools }: ToolbarProps) {
+export function AppToolbar({ onToggleNav, onToggleTools, navOpen, toolsOpen }: ToolbarProps) {
   const pathname = usePathname() ?? "/dashboard";
   const router = useRouter();
   const labels = useBreadcrumbLabels();
@@ -36,22 +45,26 @@ export function AppToolbar({ onToggleNav, onToggleTools }: ToolbarProps) {
 
   return (
     <section
-      className="flex h-[44px] w-full shrink-0 items-center gap-2 border-b border-[#e9ebed] bg-[#f7f7f7] px-2 dark:border-[#40454d] dark:bg-[#181c24]"
+      className="flex h-[44px] w-full shrink-0 items-center gap-2 border-b px-2"
+      style={{
+        backgroundColor: c.lightBreadcrumbBg,
+        borderColor: c.lightBorder,
+      }}
       aria-label="Toolbar"
     >
-      {/* Hamburger toggle */}
-      <button
-        className="flex h-8 w-8 shrink-0 cursor-pointer appearance-none items-center justify-center rounded border-none bg-transparent text-[#5f6b7a] hover:bg-[#e9ebed] dark:text-[#9ba1a8] dark:hover:bg-white/5"
-        aria-label="Open side navigation"
-        onClick={() => onToggleNav()}
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M15 3H1M15 8H1M15 13H1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
+      {/* Navigation toggle */}
+      <div className={navOpen ? "r53-toggle-active" : ""}>
+        <Button
+          variant="icon"
+          iconName="menu"
+          ariaLabel="Open side navigation"
+          ariaExpanded={navOpen}
+          onClick={() => onToggleNav()}
+        />
+      </div>
 
       {/* Breadcrumbs */}
-      <div className="min-w-0 flex-1 dark:[&_*]:!text-[#dedee3] dark:[&_a:hover]:!text-[#43B4FF]">
+      <div className="min-w-0 flex-1">
         <BreadcrumbGroup
           items={items}
           onFollow={(e) => {
@@ -62,16 +75,15 @@ export function AppToolbar({ onToggleNav, onToggleTools }: ToolbarProps) {
       </div>
 
       {/* Help icon */}
-      <button
-        className="flex h-8 w-8 shrink-0 cursor-pointer appearance-none items-center justify-center rounded border-none bg-transparent text-[#5f6b7a] hover:bg-[#e9ebed] dark:text-[#9ba1a8] dark:hover:bg-white/5"
-        aria-label="Open help panel"
-        onClick={() => onToggleTools()}
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
-          <path d="M8 12V7M8 6V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </button>
+      <div className={toolsOpen ? "r53-toggle-active" : ""}>
+        <Button
+          variant="icon"
+          iconName="status-info"
+          ariaLabel="Open help panel"
+          ariaExpanded={toolsOpen}
+          onClick={() => onToggleTools()}
+        />
+      </div>
     </section>
   );
 }

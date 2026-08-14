@@ -17,6 +17,7 @@ import type {
   DnsRecordUpdatePayload,
 } from "@/types/dns-record";
 import { CREATABLE_RECORD_TYPES } from "@/types/dns-record";
+import { displayDomain } from "@/lib/format/dns";
 
 interface RecordModalProps {
   visible: boolean;
@@ -70,7 +71,7 @@ function RecordModalInner({
 }: RecordModalInnerProps) {
   const isEdit = mode === "edit";
   const [name, setName] = useState(() =>
-    isEdit && record ? record.name : "",
+    isEdit && record ? displayDomain(record.name) : "",
   );
   const [type, setType] = useState<CreatableRecordType>(() =>
     isEdit && record ? (record.type as CreatableRecordType) : "A",

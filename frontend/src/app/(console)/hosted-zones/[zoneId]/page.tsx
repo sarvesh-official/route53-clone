@@ -10,6 +10,7 @@ import { use } from "react";
 import { ZoneHeader } from "@/features/records/zone-header";
 import { RecordsTable } from "@/features/records/records-table";
 import { zonesApi } from "@/lib/api/hosted-zones";
+import { displayDomain } from "@/lib/format/dns";
 import { useRegisterBreadcrumb } from "@/providers/breadcrumb-provider";
 import { useQuery } from "@tanstack/react-query";
 
@@ -24,7 +25,7 @@ export default function HostedZoneDetailPage({ params }: PageProps) {
     queryFn: () => zonesApi.get(zoneId),
   });
 
-  useRegisterBreadcrumb(zoneId, zone?.name ?? null);
+  useRegisterBreadcrumb(zoneId, zone?.name ? displayDomain(zone.name) : null);
 
   if (isLoading) {
     return (
@@ -45,7 +46,7 @@ export default function HostedZoneDetailPage({ params }: PageProps) {
   }
 
   return (
-    <ContentLayout header={<Header variant="h1">{zone.name}</Header>}>
+    <ContentLayout header={<Header variant="h1">{displayDomain(zone.name)}</Header>}>
       <SpaceBetween size="l">
         <ZoneHeader zone={zone} />
         <RecordsTable zone={zone} />

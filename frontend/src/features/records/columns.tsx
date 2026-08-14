@@ -3,12 +3,13 @@
 import type { TableProps } from "@cloudscape-design/components/table";
 
 import type { DnsRecord } from "@/types/dns-record";
+import { displayDomain } from "@/lib/format/dns";
 
 export const RECORD_COLUMNS: TableProps.ColumnDefinition<DnsRecord>[] = [
   {
     id: "name",
     header: "Record name",
-    cell: (item) => item.name,
+    cell: (item) => displayDomain(item.name),
     sortingField: "name",
   },
   {
