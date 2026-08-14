@@ -11,16 +11,18 @@ const ITEMS: SideNavigationProps.Item[] = [
   { type: "link", text: "Health checks", href: "/health-checks" },
   { type: "link", text: "Profiles", href: "/profiles" },
   {
-    type: "section-group",
-    title: "Global Resolver",
+    type: "section",
+    text: "Global Resolver",
+    defaultExpanded: true,
     items: [
       { type: "link", text: "Global resolvers", href: "/global-resolvers", info: "New" },
       { type: "link", text: "Shared DNS views", href: "/shared-dns-views", info: "New" },
     ],
   },
   {
-    type: "section-group",
-    title: "VPC Resolver",
+    type: "section",
+    text: "VPC Resolver",
+    defaultExpanded: true,
     items: [
       { type: "link", text: "VPCs", href: "/resolver/vpcs" },
       { type: "link", text: "Inbound endpoints", href: "/resolver/inbound-endpoints" },
@@ -31,23 +33,26 @@ const ITEMS: SideNavigationProps.Item[] = [
     ],
   },
   {
-    type: "section-group",
-    title: "Domains",
+    type: "section",
+    text: "Domains",
+    defaultExpanded: true,
     items: [
       { type: "link", text: "Registered domains", href: "/domains/registered" },
       { type: "link", text: "Requests", href: "/domains/requests" },
     ],
   },
   {
-    type: "section-group",
-    title: "IP-based routing",
+    type: "section",
+    text: "IP-based routing",
+    defaultExpanded: true,
     items: [
       { type: "link", text: "CIDR collections", href: "/cidr-collections" },
     ],
   },
   {
-    type: "section-group",
-    title: "Traffic flow",
+    type: "section",
+    text: "Traffic flow",
+    defaultExpanded: true,
     items: [
       { type: "link", text: "Traffic policies", href: "/traffic-policies" },
       { type: "link", text: "Policy records", href: "/policy-records" },

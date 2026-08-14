@@ -205,16 +205,14 @@ textarea::placeholder {
 }
 
 /* Side navigation "New" info tag - blue, bold, dotted underline */
-.awsui_side-navigation [class*="awsui_info"] > div,
-.awsui_side-navigation .awsui_info {
+[class*="awsui_root_l0dv0"] [class*="awsui_info"] {
   color: var(--r53-light-accent) !important;
   font-weight: bold !important;
   font-size: 12px !important;
   text-decoration: underline dotted !important;
   cursor: pointer !important;
 }
-.awsui-dark-mode .awsui_side-navigation [class*="awsui_info"] > div,
-.awsui-dark-mode .awsui_side-navigation .awsui_info {
+.awsui-dark-mode [class*="awsui_root_l0dv0"] [class*="awsui_info"] {
   color: var(--r53-dark-accent) !important;
 }
 
@@ -295,7 +293,8 @@ textarea::placeholder {
   border-color: #ec721f !important;
 }
 
-/* Force all Cloudscape links to use our app blue, not Cloudscape's default */
+/* Force all Cloudscape links to use our app blue, not Cloudscape's default.
+   Exclude sidebar links — those get hover/active styling below. */
 .awsui_link,
 [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
   color: var(--r53-light-accent) !important;
@@ -303,4 +302,52 @@ textarea::placeholder {
 .awsui-dark-mode .awsui_link,
 .awsui-dark-mode [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
   color: var(--r53-dark-accent) !important;
+}
+
+/* Sidebar links: only blue on hover or when active */
+[class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]) {
+  color: inherit !important;
+}
+[class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]):hover {
+  color: var(--r53-light-accent) !important;
+}
+.awsui-dark-mode [class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]) {
+  color: inherit !important;
+}
+.awsui-dark-mode [class*="awsui_root_l0dv0"] [class*="awsui_link_"]:not([class*="awsui_link-active"]):hover {
+  color: var(--r53-dark-accent) !important;
+}
+
+/* Sidebar section headers: only blue on hover */
+[class*="awsui_root_l0dv0"] [class*="awsui_section_"] [class*="awsui_header_"]:not(:hover) {
+  color: inherit !important;
+}
+[class*="awsui_root_l0dv0"] [class*="awsui_section_"] [class*="awsui_header_"]:hover {
+  color: var(--r53-light-accent) !important;
+}
+.awsui-dark-mode [class*="awsui_root_l0dv0"] [class*="awsui_section_"] [class*="awsui_header_"]:hover {
+  color: var(--r53-dark-accent) !important;
+}
+
+/* Responsive: ensure Cloudscape tables scroll horizontally on small screens */
+[class*="awsui_table-wrapper"] {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive: Cloudscape ColumnLayout stacks on small screens */
+@media (max-width: 640px) {
+  [class*="awsui_column-layout"] [class*="awsui_grid-column"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Responsive: reduce dashboard padding on mobile */
+@media (max-width: 768px) {
+  [class*="awsui_content_hyvsj"],
+  [class*="awsui_main_hyvsj"] {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
 }

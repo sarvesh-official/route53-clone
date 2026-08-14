@@ -143,9 +143,29 @@ export function AppTopNavigation() {
         </button>
       </div>
 
-      {/* Center: Search bar */}
+      {/* Center: Search bar — icon only on mobile, full bar on md+ */}
       <div className="flex h-full min-w-0 flex-1 items-center px-4">
-        <div className="relative flex max-w-[420px] w-full items-center">
+        {/* Mobile: just the search icon */}
+        <button
+          className="flex h-full w-10 shrink-0 cursor-pointer appearance-none items-center justify-center border-none bg-transparent hover:bg-white/5 md:hidden"
+          style={{ color: c.darkTextSecondary }}
+          title="Search"
+          aria-label="Search"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+            <path
+              d="m11 11 4 4M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10Z"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+
+        {/* Desktop: full search bar */}
+        <div className="relative hidden max-w-[420px] w-full items-center md:flex">
           <span className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center" style={{ color: c.darkTextDim }}>
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
               <path
@@ -271,7 +291,7 @@ export function AppTopNavigation() {
           </button>
           {settingsOpen && (
             <div
-              className="absolute right-0 top-12 z-[1001] w-[300px] shadow-xl"
+              className="absolute right-0 top-12 z-[1001] w-[280px] max-w-[calc(100vw-32px)] shadow-xl"
               style={{ border: `1px solid ${c.dropdownBorder}`, backgroundColor: c.dropdownBg }}
             >
               {/* Header */}
@@ -367,7 +387,7 @@ export function AppTopNavigation() {
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = c.darkAccountCard; }}
           >
             <span>
-              {user?.display_name ?? "Account"} (888577037798)
+              {user?.display_name ?? "Account"} <span className="hidden sm:inline">(888577037798)</span>
             </span>
             <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
               <path d="m8 11 4-6H4l4 6Z" />
@@ -387,7 +407,7 @@ export function AppTopNavigation() {
           {/* Account dropdown - comes from end of top nav */}
           {userMenuOpen && (
             <div
-              className="absolute right-0 top-12 z-[1001] w-[340px] shadow-xl"
+              className="absolute right-0 top-12 z-[1001] w-[320px] max-w-[calc(100vw-32px)] shadow-xl"
               style={{ border: `1px solid ${c.dropdownBorder}`, backgroundColor: c.dropdownBg }}
             >
               {/* Header */}
