@@ -45,26 +45,36 @@ export function AppTopNavigation() {
         </a>
 
         <button
-          className="flex h-12 cursor-pointer appearance-none items-center justify-center rounded-full border-2 border-transparent bg-transparent px-3 text-sm font-medium text-[#dedee3]"
+          className="flex h-12 cursor-pointer appearance-none items-center justify-center rounded-full border-none bg-transparent px-3 text-sm font-medium text-[#dedee3]"
           title="Amazon Q"
+          aria-label="Amazon Q"
+          aria-expanded="false"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect width="24" height="24" rx="6" fill="url(#q-grad)" />
+            <rect width="24" height="24" rx="6" fill="url(#q-icon-radial-gradient)" />
+            <g clipPath="url(#q-icon-clip-path)">
+              <path
+                d="M18.2199 7.40941L12.8699 4.31846C12.6299 4.17842 12.3199 4.1084 11.9999 4.1084C11.6799 4.1084 11.3699 4.17842 11.1299 4.31846L5.77991 7.40941C5.29991 7.67949 4.90991 8.3597 4.90991 8.90986V15.0917C4.90991 15.6419 5.29991 16.3121 5.77991 16.5922L11.1399 19.6832C11.3799 19.8232 11.6899 19.8932 12.0099 19.8932C12.3299 19.8932 12.6399 19.8232 12.8799 19.6832L18.2399 16.5922C18.7199 16.3121 19.1099 15.6419 19.1099 15.0917V8.90986C19.1099 8.3597 18.7199 7.67949 18.2399 7.40941H18.2199ZM11.9999 17.8826L6.90991 14.9417V9.05991L11.9999 6.11901L17.0899 9.05991V13.7813L13.9999 12.0008V11.2606C13.9999 11.0005 13.8599 10.7704 13.6399 10.6404L12.3599 9.90017C12.2499 9.84015 12.1199 9.80013 11.9999 9.80013C11.8799 9.80013 11.7499 9.83014 11.6399 9.90017L10.3599 10.6404C10.1399 10.7704 9.99991 11.0105 9.99991 11.2606V12.741C9.99991 13.0011 10.1399 13.2312 10.3599 13.3612L11.6399 14.1014C11.7499 14.1615 11.8799 14.2015 11.9999 14.2015C12.1199 14.2015 12.2499 14.1715 12.3599 14.1014L12.9999 13.7313L16.0899 15.5119L11.9999 17.8726V17.8826Z"
+                fill="white"
+              />
+            </g>
             <defs>
-              <linearGradient id="q-grad" x1="0" y1="0" x2="24" y2="24">
+              <radialGradient id="q-icon-radial-gradient" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(26.1421 -2.14213) rotate(135) scale(40 51.1797)">
                 <stop stopColor="#7B5FF3" />
-                <stop offset="1" stopColor="#3B82F6" />
-              </linearGradient>
+                <stop offset="0.3" stopColor="#685EF5" />
+                <stop offset="0.45" stopColor="#5A5EF6" />
+                <stop offset="0.6" stopColor="#4A5EF7" />
+                <stop offset="0.8" stopColor="#3B82F6" />
+              </radialGradient>
+              <clipPath id="q-icon-clip-path">
+                <rect width="16" height="16.0049" fill="white" transform="translate(4 3.99805)" />
+              </clipPath>
             </defs>
-            <path
-              d="M18.22 7.41L12.87 4.32C12.63 4.18 12.32 4.11 12 4.11C11.68 4.11 11.37 4.18 11.13 4.32L5.78 7.41C5.3 7.68 4.91 8.36 4.91 8.91V15.09C4.91 15.64 5.3 16.31 5.78 16.59L11.14 19.68C11.38 19.82 11.69 19.89 12.01 19.89C12.33 19.89 12.64 19.82 12.88 19.68L18.24 16.59C18.72 16.31 19.11 15.64 19.11 15.09V8.91C19.11 8.36 18.72 7.68 18.24 7.41H18.22Z"
-              fill="white"
-            />
           </svg>
         </button>
 
         <button
-          className="flex h-12 cursor-pointer appearance-none items-center justify-center border-2 border-transparent bg-transparent px-4 text-sm font-medium text-[#dedee3]"
+          className="flex h-12 cursor-pointer appearance-none items-center justify-center border-none bg-transparent px-4 text-sm font-medium text-[#dedee3]"
           title="Services"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -126,7 +136,7 @@ export function AppTopNavigation() {
       <div className="flex shrink-0 items-center">
         <a
           href="#"
-          className="hidden h-12 cursor-pointer appearance-none items-center justify-center bg-transparent px-4 text-xs font-medium text-[#dedee3] md:flex"
+          className="hidden h-12 cursor-pointer appearance-none items-center justify-center border-none bg-transparent px-4 text-xs font-medium text-[#dedee3] md:flex"
           title="CloudShell"
           onClick={(e) => e.preventDefault()}
         >
@@ -144,7 +154,7 @@ export function AppTopNavigation() {
         </a>
 
         <button
-          className="hidden h-12 cursor-pointer appearance-none items-center justify-center bg-transparent px-4 text-xs font-medium text-[#dedee3] md:flex"
+          className="hidden h-12 cursor-pointer appearance-none items-center justify-center border-none bg-transparent px-4 text-xs font-medium text-[#dedee3] md:flex"
           title="Notifications"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -160,7 +170,7 @@ export function AppTopNavigation() {
         </button>
 
         <button
-          className="hidden h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3] lg:flex"
+          className="hidden h-12 cursor-pointer appearance-none items-center gap-1 border-none bg-transparent px-4 text-xs font-medium text-[#dedee3] lg:flex"
           title="Help &amp; support"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -177,7 +187,7 @@ export function AppTopNavigation() {
         </button>
 
         <button
-          className="hidden h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3] lg:flex"
+          className="hidden h-12 cursor-pointer appearance-none items-center gap-1 border-none bg-transparent px-4 text-xs font-medium text-[#dedee3] lg:flex"
           title="Settings"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -192,7 +202,7 @@ export function AppTopNavigation() {
         </button>
 
         <button
-          className="hidden h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3] lg:flex"
+          className="hidden h-12 cursor-pointer appearance-none items-center gap-1 border-none bg-transparent px-4 text-xs font-medium text-[#dedee3] lg:flex"
           title="Global"
         >
           Global
@@ -209,7 +219,7 @@ export function AppTopNavigation() {
 
         <div ref={menuRef} className="relative">
           <button
-            className="flex h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3]"
+            className="flex h-12 cursor-pointer appearance-none items-center gap-1 border-none bg-transparent px-4 text-xs font-medium text-[#dedee3]"
             onClick={() => setUserMenuOpen(!userMenuOpen)}
             title={user?.display_name ?? "Account"}
           >
