@@ -25,8 +25,8 @@ class Settings(BaseSettings):
     session_ttl_seconds: int = 7 * 24 * 60 * 60  # 7 days
 
     # CORS
-    cors_origins: str = "http://localhost:3000"
-    cors_origin_regex: str = r"^https://.*\.vercel\.app$"
+    cors_origins: str = "http://localhost:3000,https://route53.sarvee.in"
+    cors_origin_regex: str = r"^https://.*\.(vercel\.app|sarvee\.in)$"
 
     # Demo credentials (used by seed script)
     demo_email: str = "demo@example.com"

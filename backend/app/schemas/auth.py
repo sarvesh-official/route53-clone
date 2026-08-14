@@ -8,6 +8,12 @@ class LoginRequest(BaseModel):
     password: str = Field(..., min_length=1, examples=["demo1234"])
 
 
+class RegisterRequest(BaseModel):
+    email: EmailStr = Field(..., examples=["new@example.com"])
+    password: str = Field(..., min_length=8, examples=["securepass123"])
+    display_name: str = Field(..., min_length=1, max_length=100, examples=["New User"])
+
+
 class AuthResponse(BaseModel):
     token: str
     token_type: str = "bearer"

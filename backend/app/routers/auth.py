@@ -2,6 +2,7 @@
 
 Public endpoints (no token required):
   POST /api/auth/login
+  POST /api/auth/register
 
 Protected endpoints (Bearer token required):
   POST /api/auth/logout
@@ -14,7 +15,7 @@ from app.core.database import get_db
 from app.core.deps import get_current_session, get_current_user
 from app.models.user import User
 from app.models.user_session import UserSession
-from app.schemas.auth import AuthResponse, LoginRequest, UserMe
+from app.schemas.auth import AuthResponse, LoginRequest, RegisterRequest, UserMe
 from app.schemas.common import APIResponse
 from app.services.auth_service import AuthService
 
@@ -32,6 +33,25 @@ def login(
 ) -> APIResponse[AuthResponse]:
     service = AuthService(db)
     data = service.login(email=body.email, password=body.password)
+    return APIResponse(data=data)
+
+
+@router.post(
+    "/register",
+    response_model=APIResponse[AuthResponse],
+    status_code=status.HTTP_201_CREATED,
+    summary="Register a new account",
+)
+def register(
+    body: RegisterRequest,
+    db: Session = Depends(get_db),
+) -> APIResponse[AuthResponse]:
+    service = AuthService(db)
+    data = service.register(
+        email=body.email,
+        password=body.password,
+        display_name=body.display_name,
+    )
     return APIResponse(data=data)
 
 

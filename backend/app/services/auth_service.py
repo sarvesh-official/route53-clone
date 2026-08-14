@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.exceptions import UnauthorizedException
-from app.core.security import create_session_token, verify_password
+from app.core.security import create_session_token, hash_password, verify_password
 from app.models.user import User
 from app.models.user_session import UserSession
 from app.repositories.session_repository import SessionRepository
@@ -31,6 +31,37 @@ class AuthService:
                 code="INVALID_CREDENTIALS",
                 detail="Incorrect email or password",
             )
+
+        token, session = self._create_session(user)
+        self.db.commit()
+        self.db.refresh(user)
+
+        return AuthResponse(
+            token=token,
+            user=UserMe.model_validate(user),
+        )
+
+    def register(self, email: str, password: str, display_name: str) -> AuthResponse:
+        """Create a new user and issue a session token.
+
+        Raises ConflictException if the email is already registered.
+        """
+        from app.core.exceptions import ConflictException
+
+        existing = self._users.get_by_email(email)
+        if existing:
+            raise ConflictException(
+                code="EMAIL_TAKEN",
+                detail="An account with this email already exists",
+            )
+
+        user = User(
+            email=email.lower(),
+            password_hash=hash_password(password),
+            display_name=display_name,
+        )
+        self.db.add(user)
+        self.db.flush()
 
         token, session = self._create_session(user)
         self.db.commit()
