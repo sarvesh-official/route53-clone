@@ -41,6 +41,8 @@ export function ActivityFeed() {
         gap: 12,
         height: 160,
         padding: "8px 0",
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
       }}
     >
       {buckets.map((b) => {
@@ -59,7 +61,8 @@ export function ActivityFeed() {
               flexDirection: "column",
               alignItems: "center",
               gap: 6,
-              flex: 1,
+              flex: "1 0 70px",
+              minWidth: 70,
             }}
           >
             <Box variant="small" color="text-body-secondary">
@@ -76,7 +79,7 @@ export function ActivityFeed() {
               }}
               title={`${b.records_created} records on ${label}`}
             />
-            <Box variant="small" color="text-body-secondary">
+            <Box variant="small" color="text-body-secondary" textAlign="center">
               {label}
             </Box>
           </div>
