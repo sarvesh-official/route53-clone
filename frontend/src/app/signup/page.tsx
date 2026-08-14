@@ -154,7 +154,7 @@ export default function SignupPage() {
               <div className="flex flex-col gap-5">
                 {/* Heading */}
                 <h1
-                  className="text-2xl font-semibold leading-7"
+                  className="text-xl font-semibold leading-6"
                   style={{ color: c.lightTextPrimary }}
                 >
                   Sign up for AWS
@@ -195,7 +195,7 @@ export default function SignupPage() {
                       className="inline-flex items-center gap-0.5 font-normal no-underline"
                       style={{ fontSize: "12px", color: c.darkAccentHover }}
                     >
-                      project README
+                      project documentation
                       {externalIcon}
                     </a>
                   </p>
@@ -301,7 +301,7 @@ export default function SignupPage() {
                 className="inline-flex items-center gap-0.5 font-normal no-underline"
                 style={{ fontSize: "12px", color: c.darkAccentHover }}
               >
-                project README
+                project documentation
                 {externalIcon}
               </a>{" "}
               for details.

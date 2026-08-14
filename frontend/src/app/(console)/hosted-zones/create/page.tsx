@@ -176,7 +176,7 @@ export default function CreateHostedZonePage() {
                 </Box>
                 <Box variant="p">No tags associated with the resource.</Box>
                 <Box>
-                  <Button>Add tag</Button>
+                  <Button onClick={(e) => e.preventDefault()}>Add tag</Button>
                   <span style={{ marginLeft: 8, fontSize: 12, color: c.lightTextMuted }}>
                     You can add up to 50 more tags.
                   </span>

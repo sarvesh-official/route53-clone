@@ -293,17 +293,22 @@ textarea::placeholder {
 }
 
 /* All Cloudscape primary variant buttons use AWS orange */
-.awsui_button.awsui_variant-primary,
-[class*="awsui_button"][class*="awsui_variant-primary"] {
+.awsui_button.awsui_variant-primary:not(#\9),
+[class*="awsui_button"][class*="awsui_variant-primary"]:not(#\9) {
   background-color: #FF9902 !important;
   border-color: #FF9902 !important;
   color: #161D26 !important;
   font-weight: 600 !important;
 }
-.awsui_button.awsui_variant-primary:hover,
-[class*="awsui_button"][class*="awsui_variant-primary"]:hover {
+.awsui_button.awsui_variant-primary:not(#\9):hover,
+[class*="awsui_button"][class*="awsui_variant-primary"]:not(#\9):hover {
   background-color: #ec721f !important;
   border-color: #ec721f !important;
+  color: #161D26 !important;
+}
+.awsui-dark-mode .awsui_button.awsui_variant-primary:not(#\9),
+.awsui-dark-mode [class*="awsui_button"][class*="awsui_variant-primary"]:not(#\9) {
+  color: #161D26 !important;
 }
 
 /* Force all Cloudscape links to use our app blue, not Cloudscape's default.
