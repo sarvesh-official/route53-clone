@@ -4,6 +4,18 @@ import { useState } from "react";
 
 import { submitFeedback } from "@/lib/api/feedback";
 
+/* CSS variable shortcuts for inline use.
+   All values are defined in src/app/globals.css :root */
+const c = {
+  lightTextPrimary: "var(--r53-light-text-primary)",
+  lightTextMuted: "var(--r53-light-text-muted)",
+  lightAccent: "var(--r53-light-accent)",
+  lightInputBorder: "var(--r53-light-input-border)",
+  awsOrange: "var(--r53-aws-orange)",
+  sharedError: "var(--r53-shared-error)",
+  sharedErrorBg: "var(--r53-shared-error-bg)",
+} as const;
+
 interface FeedbackModalProps {
   open: boolean;
   onClose: () => void;
@@ -45,11 +57,15 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
   };
 
   // Same Cloudscape reset issue as login-form — inline styles bypass it
-  const inputStyle = { fontSize: "13px" };
+  const inputStyle = {
+    fontSize: "13px",
+    borderColor: c.lightInputBorder,
+    color: c.lightTextPrimary,
+  };
   const inputCls =
-    "h-8 w-full rounded-lg border border-[#8c8c94] bg-white px-3 py-[5px] text-[#0f141a] outline-none box-border";
-  const labelCls = "mb-1 block font-medium text-[#0f141a]";
-  const labelStyle = { fontSize: "13px" };
+    "h-8 w-full rounded-lg border bg-white px-3 py-[5px] outline-none box-border";
+  const labelCls = "mb-1 block font-medium";
+  const labelStyle = { fontSize: "13px", color: c.lightTextPrimary };
 
   return (
     <div
@@ -61,12 +77,16 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 pt-1 pb-2">
-          <h2 className="text-lg font-bold text-[#0f141a]">
+          <h2
+            className="text-lg font-bold"
+            style={{ color: c.lightTextPrimary }}
+          >
             Feedback for Route 53 Clone
           </h2>
           <button
             onClick={onClose}
-            className="flex h-7 w-7 cursor-pointer appearance-none items-center justify-center rounded-full border-none bg-transparent text-[#687078] transition-colors hover:bg-black/5"
+            className="flex h-7 w-7 cursor-pointer appearance-none items-center justify-center rounded-full border-none bg-transparent transition-colors hover:bg-black/5"
+            style={{ color: c.lightTextMuted }}
             aria-label="Close feedback dialog"
             title="Close feedback dialog"
           >
@@ -85,15 +105,22 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
         {success ? (
           <div className="px-6 py-10 text-center">
             <div className="mb-3 text-2xl">&#10003;</div>
-            <h3 className="mb-2 text-lg font-medium text-[#0f141a]">
+            <h3
+              className="mb-2 text-lg font-medium"
+              style={{ color: c.lightTextPrimary }}
+            >
               Thank you for your feedback!
             </h3>
-            <p className="mb-4 text-sm text-[#687078]">
+            <p
+              className="mb-4 text-sm"
+              style={{ color: c.lightTextMuted }}
+            >
               Your feedback on this Route 53 clone assignment has been recorded.
             </p>
             <button
               onClick={onClose}
-              className="h-8 cursor-pointer appearance-none rounded-full border-2 border-[#006ce0] bg-white px-6 text-sm font-bold text-[#006ce0]"
+              className="h-8 cursor-pointer appearance-none rounded-full border-2 bg-white px-6 text-sm font-bold"
+              style={{ borderColor: c.lightAccent, color: c.lightAccent }}
             >
               Close
             </button>
@@ -101,7 +128,10 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
         ) : (
           <>
             <div className="px-6 py-2">
-              <p className="mb-4 text-sm text-[#0f141a]">
+              <p
+                className="mb-4 text-sm"
+                style={{ color: c.lightTextPrimary }}
+              >
                 Thank you for reviewing this assignment. Your
                 feedback helps improve the project.
               </p>
@@ -109,7 +139,14 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
               <form onSubmit={onSubmit}>
                 <div className="flex flex-col gap-4">
                   {error && (
-                    <div className="rounded-lg border border-[#d13212] bg-[#fff4f4] px-3 py-2 text-sm text-[#d13212]">
+                    <div
+                      className="rounded-lg border px-3 py-2 text-sm"
+                      style={{
+                        borderColor: c.sharedError,
+                        backgroundColor: c.sharedErrorBg,
+                        color: c.sharedError,
+                      }}
+                    >
                       {error}
                     </div>
                   )}
@@ -118,7 +155,10 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                     <label className={labelCls} style={labelStyle} htmlFor="fb-type">
                       Type
                     </label>
-                    <p className="mb-1 text-xs text-[#687078]">
+                    <p
+                      className="mb-1 text-xs"
+                      style={{ color: c.lightTextMuted }}
+                    >
                       Choose the type of feedback you are submitting.
                     </p>
                     <div className="relative">
@@ -128,12 +168,13 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                         onChange={(e) => setType(e.target.value)}
                         onFocus={() => setTypeOpen(true)}
                         onBlur={() => setTypeOpen(false)}
-                        className="h-8 w-full cursor-pointer appearance-none rounded-lg bg-white px-3 py-1.5 pr-8 text-[#0f141a] outline-none box-border transition-colors"
+                        className="h-8 w-full cursor-pointer appearance-none rounded-lg bg-white px-3 py-1.5 pr-8 outline-none box-border transition-colors"
                         style={{
                           fontSize: "13px",
+                          color: c.lightTextPrimary,
                           border: typeOpen
-                            ? "2px solid #006ce0"
-                            : "1px solid #8c8c94",
+                            ? `2px solid ${c.lightAccent}`
+                            : `1px solid ${c.lightInputBorder}`,
                         }}
                       >
                         <option value="">Select a type...</option>
@@ -148,7 +189,7 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                           transform: typeOpen
                             ? "translateY(-50%) rotate(180deg)"
                             : "translateY(-50%)",
-                          color: typeOpen ? "#006ce0" : "#687078",
+                          color: typeOpen ? c.lightAccent : c.lightTextMuted,
                         }}
                       >
                         <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -167,11 +208,14 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                       value={message}
                       onChange={(e) => setMessage(e.target.value.slice(0, 1000))}
                       rows={3}
-                      className="w-full rounded-lg border border-[#8c8c94] bg-white px-3 py-2 text-[#0f141a] outline-none box-border"
+                      className="w-full rounded-lg border bg-white px-3 py-2 outline-none box-border"
                       style={inputStyle}
                       placeholder=""
                     />
-                    <p className="mt-1 text-xs text-[#687078]">
+                    <p
+                      className="mt-1 text-xs"
+                      style={{ color: c.lightTextMuted }}
+                    >
                       {1000 - message.length} characters available. Do not
                       disclose any personal, commercially sensitive, or
                       confidential information.
@@ -188,17 +232,21 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                         return (
                           <label
                             key={val}
-                            className="flex cursor-pointer items-center gap-2 text-sm text-[#0f141a]"
+                            className="flex cursor-pointer items-center gap-2 text-sm"
+                            style={{ color: c.lightTextPrimary }}
                           >
                             <span
                               onClick={() => setSatisfied(val)}
                               className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 bg-white"
                               style={{
-                                borderColor: selected ? "#006ce0" : "#8c8c94",
+                                borderColor: selected ? c.lightAccent : c.lightInputBorder,
                               }}
                             >
                               {selected && (
-                                <span className="h-2 w-2 rounded-full bg-[#006ce0]" />
+                                <span
+                                  className="h-2 w-2 rounded-full"
+                                  style={{ backgroundColor: c.lightAccent }}
+                                />
                               )}
                             </span>
                             {val === "positive" ? "Yes" : "No"}
@@ -212,7 +260,7 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                     <label className={labelCls} style={labelStyle} htmlFor="fb-email">
                       We may want to contact you about your feedback. If you
                       agree, provide your email address.{" "}
-                      <span className="italic text-[#687078]">- optional</span>
+                      <span className="italic" style={{ color: c.lightTextMuted }}>- optional</span>
                     </label>
                     <input
                       id="fb-email"
@@ -220,10 +268,13 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="email@example.com"
-                      style={{ fontSize: "13px", fontStyle: "italic" }}
+                      style={{ fontSize: "13px", fontStyle: "italic", borderColor: c.lightInputBorder, color: c.lightTextPrimary }}
                       className={inputCls}
                     />
-                    <p className="mt-1 text-xs text-[#687078]">
+                    <p
+                      className="mt-1 text-xs"
+                      style={{ color: c.lightTextMuted }}
+                    >
                       Personal information you provide to us will be handled in
                       accordance with the AWS Privacy Notice
                       (https://aws.amazon.com/privacy/).
@@ -237,8 +288,8 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
               <button
                 type="button"
                 onClick={onClose}
-                className="cursor-pointer appearance-none border-none bg-transparent px-4 py-1 font-medium text-[#006ce0] no-underline"
-                style={{ fontSize: "12px" }}
+                className="cursor-pointer appearance-none border-none bg-transparent px-4 py-1 font-medium no-underline"
+                style={{ fontSize: "12px", color: c.lightAccent }}
               >
                 Cancel
               </button>
@@ -246,9 +297,12 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                 type="submit"
                 onClick={onSubmit}
                 disabled={submitting}
-                className="h-7 cursor-pointer appearance-none rounded-full border-2 border-[#ff9900] bg-[#ff9900] px-5 font-bold text-[#0f141a]"
+                className="h-7 cursor-pointer appearance-none rounded-full border-2 px-5 font-bold"
                 style={{
                   fontSize: "12px",
+                  borderColor: c.awsOrange,
+                  backgroundColor: c.awsOrange,
+                  color: c.lightTextPrimary,
                   opacity: submitting ? 0.6 : 1,
                   cursor: submitting ? "not-allowed" : "pointer",
                 }}

@@ -405,19 +405,25 @@ These tell you more about the codebase than a feature list does.
 
 ## Assumptions
 
-**No actual DNS resolution.** Records are stored and displayed but don't propagate anywhere. This is a UX clone, not a DNS server. Plugging in a real resolver would require a DNS backend like PowerDNS or CoreDNS, which is out of scope for a 24-hour assignment.
+**Mocked authentication.** Login uses opaque bearer-token sessions stored in a `user_sessions` table, not JWTs and not AWS IAM. Logout deletes the session row, making the token immediately invalid. Sessions persist across page refreshes and subsequent requests while the SQLite database is available. Four demo accounts are seeded (demo, alice, bob, carol) so reviewers can test multi-user zone ownership without signing up. Ownership is enforced server-side, with every hosted-zone and record access scoped to the authenticated user, so Bob cannot access Alice's zones by guessing an ID.
 
-**SQLite over Postgres.** Zero infrastructure for local dev. The SQLAlchemy ORM layer is DB-agnostic, switching is a one-line connection string change. The real cost is no concurrent writes at scale, but for a single-user demo it's fine.
+**No actual DNS resolution.** Records are stored, validated, and displayed but do not propagate to any DNS server. This is a UX clone of the Route 53 console, not a DNS resolver. The assignment explicitly focuses on recreating the Route 53 user experience rather than implementing actual DNS functionality.
 
-**Mocked auth, not AWS IAM.** Sessions are opaque tokens in a `user_sessions` table, not JWTs. Logout deletes the row and the token is immediately invalid. The extra DB lookup per request is worth it for a demo where reviewers log in and out repeatedly.
+**Mocked AWS dependencies.** IAM, AWS Accounts, Organizations, and Billing endpoints return static placeholder data. The real AWS APIs require SigV4 signing and an active AWS account, which is out of scope. The frontend consumes these mocked responses so the console feels complete.
 
-**Mocked IAM, Accounts, Organizations, Billing.** These endpoints return static placeholder data. The real AWS APIs require SigV4 signing and an AWS account, which is out of scope. The frontend pages render the mocked responses so the console feels complete.
+**Auto-generated NS and SOA records.** When a hosted zone is created, apex NS and SOA records are automatically created with placeholder nameserver values (ns-1.awsdns-clone.com. through ns-4.awsdns-clone.com.). Their structure matches Route 53, but the nameserver values are cosmetic and have no real DNS functionality.
 
-**Cloudscape over custom components.** Using AWS's own design system meant the UI looks right without pixel-pushing CSS. The tradeoff is working within Cloudscape's constraints, fixed icon set, layout patterns, and theming tokens that don't always map cleanly to Tailwind.
+**SQLite over Postgres.** SQLite provides zero infrastructure for local development. The SQLAlchemy ORM layer is database-agnostic, so switching to another relational database requires only configuration changes. The tradeoff is limited concurrent-write scalability, which is appropriate for this small-scale, single-instance demo.
 
-**BIND import is parser-only.** The import handles `$ORIGIN`, `@`, comments, and common record types. It skips duplicates rather than merging. A full BIND parser would handle `$INCLUDE`, `$TTL`, and quoted strings, but that's overkill for this demo.
+**Cloudscape over custom CSS.** Using AWS's own design system provides Route 53-like components, spacing, typography, tables, forms, modals, notifications, and layout patterns without hand-crafting every component. The tradeoff is working within Cloudscape's component and theming constraints. The top navigation bar is custom-built because Cloudscape does not provide a global navigation component matching the AWS console header closely enough for the pixel-accurate clone.
 
-**Ephemeral filesystem on Render free tier.** The SQLite database is wiped on every deploy. The Procfile runs `alembic upgrade head && python -m app.seed` on each startup so demo data is always available. Data created during a session persists until the instance spins down. A persistent disk or managed Postgres would fix this, but both cost money.
+**BIND import is parser-only.** The import handles `$ORIGIN`, `@`, comments, and the nine record types specified in the assignment: A, AAAA, CNAME, TXT, MX, NS, PTR, SRV, and CAA. It skips duplicates rather than merging them. A full BIND parser would handle additional constructs such as `$INCLUDE`, `$TTL`, and more complex quoted strings, but that is beyond the scope of this demo.
+
+**Coming-soon pages for non-core sections.** Dashboard is fully functional with live statistics from the database. Traffic Policies, Health Checks, Resolver, Profiles, and other non-core Route 53 sections render polished "Coming Soon" pages using Route 53-style descriptions of the corresponding AWS functionality.
+
+**Region selection is static.** Route 53 is a global service, so the top navigation shows a static Global label without a region selector, matching the Route 53 console experience.
+
+**Render Free tier deployment.** The backend is deployed on Render's Free tier with SQLite. The SQLite database lives on Render's ephemeral filesystem, so locally created data can be lost when the service redeploys, restarts, or spins down. Render documents that Free web services spin down after 15 minutes without inbound traffic and that local filesystem changes are not preserved across these events. The startup command runs `alembic upgrade head && python -m app.seed`, with the seed operation designed to be idempotent so demo accounts and seed data are available when the database is recreated. UptimeRobot pings the health endpoint every 5 minutes to reduce the likelihood of cold starts during active demo periods. Durable SQLite storage would require a paid Render persistent disk, while managed Postgres is another persistence option.
 
 ---
 

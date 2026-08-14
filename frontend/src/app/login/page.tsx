@@ -7,6 +7,18 @@ import { FeedbackModal } from "@/features/auth/feedback-modal";
 import { LoginForm } from "@/features/auth/login-form";
 import { useAuth } from "@/providers/auth-provider";
 
+/* CSS variable shortcuts for inline use.
+   All values are defined in src/app/globals.css :root */
+const c = {
+  lightBg: "var(--r53-light-bg)",
+  lightTextPrimary: "var(--r53-light-text-primary)",
+  lightTextMuted: "var(--r53-light-text-muted)",
+  lightAccent: "var(--r53-light-accent)",
+  lightBorder: "var(--r53-light-border)",
+  awsOrange: "var(--r53-aws-orange)",
+  darkAccentHover: "var(--r53-dark-accent-hover)",
+} as const;
+
 const MARKETING_IMAGES = [
   "/assets/marketing/aws-marketing-01.png",
   "/assets/marketing/aws-marketing-02.png",
@@ -35,24 +47,33 @@ export default function LoginPage() {
 
   if (status === "loading" || status === "authenticated") {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#fafafa]">
-        <div className="h-6 w-6 animate-spin rounded-full border-3 border-[#e9ebed] border-t-[#ff9900]" />
+      <div
+        className="flex h-screen items-center justify-center"
+        style={{ backgroundColor: c.lightBg }}
+      >
+        <div
+          className="h-6 w-6 animate-spin rounded-full border-3"
+          style={{ borderColor: c.lightBorder, borderTopColor: c.awsOrange }}
+        />
         <style>{`@keyframes r53-spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#fafafa] font-sans text-[#0f141a] md:bg-[#fafafa] md:[background-image:url(/assets/aws-bg-left.png),url(/assets/aws-bg-right.png)] md:[background-position:left_bottom,right_bottom] md:[background-repeat:no-repeat]">
+    <div
+      className="flex min-h-screen flex-col font-sans md:[background-image:url(/assets/aws-bg-left.png),url(/assets/aws-bg-right.png)] md:[background-position:left_bottom,right_bottom] md:[background-repeat:no-repeat]"
+      style={{ backgroundColor: c.lightBg, color: c.lightTextPrimary }}
+    >
       {/* Desktop only — hidden on mobile, links move to bottom */}
       <div className="hidden justify-end px-5 pt-5 md:flex">
         <div className="flex items-center gap-4">
           <button
             onClick={() => setFeedbackOpen(true)}
             className="flex h-8 cursor-pointer appearance-none items-center rounded-full border-2 border-transparent bg-transparent px-4 no-underline transition-colors hover:bg-[#e9f3ff]"
-            style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+            style={{ fontSize: "13px", fontWeight: 600, color: c.lightAccent }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#0a3a8f")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#006ce0")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = c.lightAccent)}
           >
             Provide feedback
           </button>
@@ -61,7 +82,7 @@ export default function LoginPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-7 cursor-pointer appearance-none items-center rounded-full border-none bg-transparent px-4 no-underline"
-            style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+            style={{ fontSize: "13px", fontWeight: 600, color: c.lightAccent }}
           >
             Source Code
           </a>
@@ -70,7 +91,7 @@ export default function LoginPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-7 cursor-pointer appearance-none items-center rounded-full border-none bg-transparent px-4 no-underline"
-            style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+            style={{ fontSize: "13px", fontWeight: 600, color: c.lightAccent }}
           >
             English
           </a>
@@ -104,9 +125,9 @@ export default function LoginPage() {
               href="https://github.com/sarvesh-official/route53-clone#readme"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#1C7AE3", textDecoration: "underline", fontWeight: 500 }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#0f141a")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#1C7AE3")}
+              style={{ color: c.darkAccentHover, textDecoration: "underline", fontWeight: 500 }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = c.lightTextPrimary)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = c.darkAccentHover)}
             >
               project documentation
             </a>{" "}
@@ -127,7 +148,10 @@ export default function LoginPage() {
       </div>
 
       {/* Copyright footer */}
-      <div className="px-6 py-4 text-center text-xs text-[#687078] font-sans">
+      <div
+        className="px-6 py-4 text-center text-xs font-sans"
+        style={{ color: c.lightTextMuted }}
+      >
         (Clone) 2026 Route 53 Clone. Built for Scaler AI Labs assignment.
       </div>
 
@@ -136,7 +160,7 @@ export default function LoginPage() {
         <button
           onClick={() => setFeedbackOpen(true)}
           className="cursor-pointer appearance-none border-none bg-transparent no-underline"
-          style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+          style={{ fontSize: "13px", fontWeight: 600, color: c.lightAccent }}
         >
           Provide feedback
         </button>
@@ -145,7 +169,7 @@ export default function LoginPage() {
           target="_blank"
           rel="noopener noreferrer"
           className="cursor-pointer appearance-none border-none bg-transparent no-underline"
-          style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+          style={{ fontSize: "13px", fontWeight: 600, color: c.lightAccent }}
         >
           Source Code
         </a>
@@ -154,7 +178,7 @@ export default function LoginPage() {
           target="_blank"
           rel="noopener noreferrer"
           className="cursor-pointer appearance-none border-none bg-transparent no-underline"
-          style={{ fontSize: "13px", fontWeight: 600, color: "#006ce0" }}
+          style={{ fontSize: "13px", fontWeight: 600, color: c.lightAccent }}
         >
           English
         </a>

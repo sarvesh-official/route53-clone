@@ -30,14 +30,7 @@ export default function DashboardPage() {
   return (
     <SpaceBetween size="l">
       <Box padding={{ top: "m", horizontal: "l" }}>
-        <Header
-          variant="h1"
-          actions={
-            <Button iconName="status-info" variant="icon" ariaLabel="More information about Route 53 Dashboard">
-              Info
-            </Button>
-          }
-        >
+        <Header variant="h1">
           Route 53 Dashboard
         </Header>
       </Box>

@@ -7,6 +7,22 @@ import { useEffect, useState } from "react";
 import { isApiError } from "@/lib/api/errors";
 import { useAuth } from "@/providers/auth-provider";
 
+/* CSS variable shortcuts for inline use.
+   All values are defined in src/app/globals.css :root */
+const c = {
+  lightBg: "var(--r53-light-bg)",
+  lightTextPrimary: "var(--r53-light-text-primary)",
+  lightTextMuted: "var(--r53-light-text-muted)",
+  lightAccent: "var(--r53-light-accent)",
+  lightInputBorder: "var(--r53-light-input-border)",
+  lightBorder: "var(--r53-light-border)",
+  awsOrange: "var(--r53-aws-orange)",
+  sharedWhite: "var(--r53-shared-white)",
+  sharedError: "var(--r53-shared-error)",
+  sharedErrorBg: "var(--r53-shared-error-bg)",
+  darkAccentHover: "var(--r53-dark-accent-hover)",
+} as const;
+
 export default function SignupPage() {
   const router = useRouter();
   const { register, status } = useAuth();
@@ -51,18 +67,29 @@ export default function SignupPage() {
   };
 
   const inputCls =
-    "r53-input h-9 w-full rounded-lg border border-[#8c8c94] bg-white px-3 py-2 text-[#0f141a] outline-none box-border transition-colors";
-  const labelCls = "mb-1 block font-medium text-[#0f141a]";
+    "r53-input h-9 w-full rounded-lg border bg-white px-3 py-2 outline-none box-border transition-colors";
+  const inputStyle = {
+    borderColor: c.lightInputBorder,
+    color: c.lightTextPrimary,
+  };
+  const labelCls = "mb-1 block font-medium";
+  const labelStyle = { color: c.lightTextPrimary };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans text-[#0f141a]">
+    <div
+      className="flex min-h-screen flex-col bg-white font-sans"
+      style={{ color: c.lightTextPrimary }}
+    >
       {/* Header — language + logo */}
       <div className="flex items-center justify-between px-6 pt-5 sm:px-10">
         {/* Language selector — cosmetic, matches AWS */}
-        <div className="flex items-center gap-1 text-sm text-[#0f141a]">
+        <div
+          className="flex items-center gap-1 text-sm"
+          style={{ color: c.lightTextPrimary }}
+        >
           <span style={{ fontSize: "14px" }}>English</span>
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-            <path d="m8 11 4-6H4l4 6Z" fill="#687078" />
+            <path d="m8 11 4-6H4l4 6Z" fill={c.lightTextMuted} />
           </svg>
         </div>
         <a href="/login" onClick={(e) => e.preventDefault()}>
@@ -81,7 +108,10 @@ export default function SignupPage() {
         <div className="flex w-full max-w-4xl flex-col items-start gap-8 md:flex-row md:justify-center md:gap-12 lg:gap-16">
           {/* Info panel — hidden on mobile/tablet */}
           <div className="hidden md:block md:w-96 lg:w-[30rem]">
-            <h2 className="mb-3 text-2xl font-semibold leading-7 text-[#0f141a]">
+            <h2
+              className="mb-3 text-2xl font-semibold leading-7"
+              style={{ color: c.lightTextPrimary }}
+            >
               Try AWS at no cost for up to 6 months
             </h2>
             <p className="text-sm leading-5 text-[#424650]">
@@ -89,15 +119,18 @@ export default function SignupPage() {
               completing various activities.
             </p>
             {/* Rocket illustration placeholder — using AWS orange circle */}
-            <div className="mt-6 flex h-48 w-full items-center justify-center rounded-lg" style={{ backgroundColor: "#fafafa" }}>
+            <div
+              className="mt-6 flex h-48 w-full items-center justify-center rounded-lg"
+              style={{ backgroundColor: c.lightBg }}
+            >
               <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
-                <circle cx="60" cy="40" r="30" fill="#ff9900" opacity="0.15" />
+                <circle cx="60" cy="40" r="30" fill={c.awsOrange} opacity="0.15" />
                 <path
                   d="M60 15c-8 0-14 6-14 14v10l-4 6h6v6c0 2 2 4 4 4h2v6h12v-6h2c2 0 4-2 4-4v-6h6l-4-6V29c0-8-6-14-14-14z"
-                  fill="#ff9900"
+                  fill={c.awsOrange}
                 />
-                <circle cx="55" cy="32" r="3" fill="#fff" />
-                <circle cx="65" cy="32" r="3" fill="#fff" />
+                <circle cx="55" cy="32" r="3" fill={c.sharedWhite} />
+                <circle cx="65" cy="32" r="3" fill={c.sharedWhite} />
               </svg>
             </div>
           </div>
@@ -107,12 +140,22 @@ export default function SignupPage() {
             <form onSubmit={onSubmit}>
               <div className="flex flex-col gap-5">
                 {/* Heading */}
-                <h1 className="text-2xl font-semibold leading-7 text-[#0f141a]">
+                <h1
+                  className="text-2xl font-semibold leading-7"
+                  style={{ color: c.lightTextPrimary }}
+                >
                   Sign up for AWS
                 </h1>
 
                 {error && (
-                  <div className="rounded-lg border border-[#d13212] bg-[#fff4f4] px-3.5 py-2.5 text-sm text-[#d13212]">
+                  <div
+                    className="rounded-lg border px-3.5 py-2.5 text-sm"
+                    style={{
+                      borderColor: c.sharedError,
+                      backgroundColor: c.sharedErrorBg,
+                      color: c.sharedError,
+                    }}
+                  >
                     <strong>There was a problem</strong>
                     <div className="mt-1">{error}</div>
                   </div>
@@ -120,17 +163,24 @@ export default function SignupPage() {
 
                 {/* Email */}
                 <div>
-                  <label htmlFor="emailAddress" className={labelCls} style={{ fontSize: "14px" }}>
+                  <label
+                    htmlFor="emailAddress"
+                    className={labelCls}
+                    style={{ fontSize: "14px", ...labelStyle }}
+                  >
                     Root user email address
                   </label>
-                  <p className="mb-1.5 text-xs text-[#687078]">
+                  <p
+                    className="mb-1.5 text-xs"
+                    style={{ color: c.lightTextMuted }}
+                  >
                     Used for account recovery and as described in the{" "}
                     <a
                       href="https://github.com/sarvesh-official/route53-clone#readme"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-0.5 font-normal no-underline"
-                      style={{ fontSize: "12px", color: "#1C7AE3" }}
+                      style={{ fontSize: "12px", color: c.darkAccentHover }}
                     >
                       AWS Privacy Notice
                       <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
@@ -148,16 +198,23 @@ export default function SignupPage() {
                     spellCheck={false}
                     placeholder=""
                     className={inputCls}
-                    style={{ fontSize: "14px" }}
+                    style={{ fontSize: "14px", ...inputStyle }}
                   />
                 </div>
 
                 {/* Account name */}
                 <div>
-                  <label htmlFor="accountName" className={labelCls} style={{ fontSize: "14px" }}>
+                  <label
+                    htmlFor="accountName"
+                    className={labelCls}
+                    style={{ fontSize: "14px", ...labelStyle }}
+                  >
                     AWS account name
                   </label>
-                  <p className="mb-1.5 text-xs text-[#687078]">
+                  <p
+                    className="mb-1.5 text-xs"
+                    style={{ color: c.lightTextMuted }}
+                  >
                     Choose a name for your account. You can change this name in
                     your account settings after you sign up.
                   </p>
@@ -170,7 +227,7 @@ export default function SignupPage() {
                     spellCheck={false}
                     placeholder=""
                     className={inputCls}
-                    style={{ fontSize: "14px" }}
+                    style={{ fontSize: "14px", ...inputStyle }}
                   />
                 </div>
 
@@ -178,9 +235,10 @@ export default function SignupPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="h-9 w-full cursor-pointer appearance-none rounded-md border-none bg-[#006ce0] font-medium text-white transition-colors hover:bg-[#0a3a8f]"
+                  className="h-9 w-full cursor-pointer appearance-none rounded-md border-none font-medium text-white transition-colors hover:bg-[#0a3a8f]"
                   style={{
                     fontSize: "14px",
+                    backgroundColor: c.lightAccent,
                     opacity: submitting ? 0.6 : 1,
                     cursor: submitting ? "not-allowed" : "pointer",
                   }}
@@ -193,7 +251,12 @@ export default function SignupPage() {
             {/* OR divider */}
             <div className="my-6 flex items-center gap-3">
               <div className="h-px flex-1 bg-[#d5dbdb]" />
-              <span className="text-xs font-normal text-[#687078]">OR</span>
+              <span
+                className="text-xs font-normal"
+                style={{ color: c.lightTextMuted }}
+              >
+                OR
+              </span>
               <div className="h-px flex-1 bg-[#d5dbdb]" />
             </div>
 
@@ -201,21 +264,28 @@ export default function SignupPage() {
             <button
               type="button"
               onClick={() => router.push("/login")}
-              className="h-9 w-full cursor-pointer appearance-none rounded-md border border-[#8c8c94] bg-white font-medium text-[#0f141a] transition-colors hover:bg-[#f0f4ff]"
-              style={{ fontSize: "14px" }}
+              className="h-9 w-full cursor-pointer appearance-none rounded-md border bg-white font-medium transition-colors hover:bg-[#f0f4ff]"
+              style={{
+                fontSize: "14px",
+                borderColor: c.lightInputBorder,
+                color: c.lightTextPrimary,
+              }}
             >
               Sign in to an existing AWS account
             </button>
 
             {/* Cookie notice */}
-            <p className="mt-6 text-xs leading-5 text-[#687078]">
+            <p
+              className="mt-6 text-xs leading-5"
+              style={{ color: c.lightTextMuted }}
+            >
               This site uses essential cookies. See our{" "}
               <a
                 href="https://github.com/sarvesh-official/route53-clone#readme"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-0.5 font-normal no-underline"
-                style={{ fontSize: "12px", color: "#1C7AE3" }}
+                style={{ fontSize: "12px", color: c.darkAccentHover }}
               >
                 Cookie Notice
                 <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
@@ -229,7 +299,10 @@ export default function SignupPage() {
       </div>
 
       {/* Footer */}
-      <div className="mt-8 border-t border-[#e9ebed] px-6 py-5 sm:px-10">
+      <div
+        className="mt-8 border-t px-6 py-5 sm:px-10"
+        style={{ borderColor: c.lightBorder }}
+      >
         <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
           <div className="flex items-center gap-3 text-sm">
             <a
@@ -237,7 +310,7 @@ export default function SignupPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-0.5 font-normal no-underline"
-              style={{ fontSize: "14px", color: "#1C7AE3" }}
+              style={{ fontSize: "14px", color: c.darkAccentHover }}
             >
               Privacy Policy
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -250,7 +323,7 @@ export default function SignupPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-0.5 font-normal no-underline"
-              style={{ fontSize: "14px", color: "#1C7AE3" }}
+              style={{ fontSize: "14px", color: c.darkAccentHover }}
             >
               Terms of Use
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -258,7 +331,10 @@ export default function SignupPage() {
               </svg>
             </a>
           </div>
-          <p className="text-xs text-[#687078]">
+          <p
+            className="text-xs"
+            style={{ color: c.lightTextMuted }}
+          >
             (Clone) Route 53 Clone. Built for Scaler AI Labs assignment.
           </p>
         </div>

@@ -54,18 +54,8 @@ const ITEMS: SideNavigationProps.Item[] = [
     ],
   },
   { type: "divider" },
-  {
-    type: "link",
-    text: "DNS Firewall",
-    href: "https://console.aws.amazon.com/vpc/home#DNSFirewallRuleGroups:",
-    external: true,
-  },
-  {
-    type: "link",
-    text: "Application Recovery Controller",
-    href: "https://console.aws.amazon.com/route53recovery/home?fromRoute53=1",
-    external: true,
-  },
+  { type: "link", text: "DNS Firewall", href: "/dns-firewall" },
+  { type: "link", text: "Application Recovery Controller", href: "/recovery-controller" },
 ];
 
 export function AppSideNavigation() {
@@ -78,7 +68,6 @@ export function AppSideNavigation() {
       activeHref={pathname ?? "/dashboard"}
       items={ITEMS}
       onFollow={(e) => {
-        if (e.detail.external) return;
         e.preventDefault();
         router.push(e.detail.href);
       }}

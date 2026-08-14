@@ -3,6 +3,9 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
 
+/* Map dark: variant to Cloudscape's awsui-dark-mode class */
+@custom-variant dark (&:where(.awsui-dark-mode, .awsui-dark-mode *));
+
 @source "./src/**/*.{tsx,ts,jsx,js}";
 
 /* Cloudscape sets -webkit-appearance: button on all <button> elements,

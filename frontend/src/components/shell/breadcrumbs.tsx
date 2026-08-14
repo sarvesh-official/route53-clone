@@ -1,7 +1,7 @@
 "use client";
 
 import BreadcrumbGroup from "@cloudscape-design/components/breadcrumb-group";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { useBreadcrumbLabels } from "@/providers/breadcrumb-provider";
 
@@ -25,6 +25,7 @@ function buildCrumbs(pathname: string, labels: Record<string, string>): Crumb[] 
 
 export function AppBreadcrumbs() {
   const pathname = usePathname() ?? "/dashboard";
+  const router = useRouter();
   const labels = useBreadcrumbLabels();
   const items = buildCrumbs(pathname, labels);
 
@@ -33,8 +34,14 @@ export function AppBreadcrumbs() {
       items={items}
       onFollow={(e) => {
         e.preventDefault();
-        window.location.href = e.detail.href;
+        router.push(e.detail.href);
       }}
     />
   );
+}
+
+export function AppBreadcrumbItems() {
+  const pathname = usePathname() ?? "/dashboard";
+  const labels = useBreadcrumbLabels();
+  return buildCrumbs(pathname, labels);
 }

@@ -5,6 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 
 import { statsApi } from "@/lib/api/stats";
 
+const c = {
+  awsOrange: "var(--r53-aws-orange)",
+} as const;
+
 export function ActivityFeed() {
   const { data, isLoading } = useQuery({
     queryKey: ["activity"],
@@ -66,7 +70,7 @@ export function ActivityFeed() {
                 width: "100%",
                 maxWidth: 48,
                 height: Math.max(h, 2),
-                backgroundColor: "#ff9900",
+                backgroundColor: c.awsOrange,
                 borderRadius: 4,
                 transition: "height 0.3s ease",
               }}

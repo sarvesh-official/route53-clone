@@ -1,5 +1,6 @@
 "use client";
 
+import Popover from "@cloudscape-design/components/popover";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -10,23 +11,13 @@ export function AppTopNavigation() {
   const router = useRouter();
   const { user, logout } = useAuth();
   const { theme, setTheme } = useTheme();
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [regionOpen, setRegionOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
-  const regionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setUserMenuOpen(false);
-      }
       if (settingsRef.current && !settingsRef.current.contains(e.target as Node)) {
         setSettingsOpen(false);
-      }
-      if (regionRef.current && !regionRef.current.contains(e.target as Node)) {
-        setRegionOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -109,7 +100,7 @@ export function AppTopNavigation() {
 
       {/* Center: Search bar */}
       <div className="flex h-full min-w-0 flex-1 items-center px-4">
-        <div className="relative flex w-full items-center">
+        <div className="relative flex max-w-[420px] w-full items-center">
           <span className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-[#c6c6cd]">
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
               <path
@@ -126,15 +117,15 @@ export function AppTopNavigation() {
           <input
             type="search"
             placeholder="Search"
-            className="h-[30px] w-full rounded-lg border-2 border-[#62676f] bg-[#0f141a] py-px pl-9 pr-20 text-sm text-[#ebebf0] outline-none placeholder:italic placeholder:text-[#a4a4ad]"
+            className="h-[30px] w-full rounded-lg border-2 border-[#62676f] bg-[#0f141a] py-px pl-9 pr-12 text-sm text-[#ebebf0] outline-none placeholder:italic placeholder:text-[#a4a4ad]"
           />
 
-          <span className="pointer-events-none absolute right-9 top-1/2 hidden -translate-y-1/2 text-xs text-[#a4a4ad] md:block">
+          <span className="pointer-events-none absolute right-12 top-1/2 hidden -translate-y-1/2 text-xs text-[#a4a4ad] md:block">
             [Option+S]
           </span>
 
           <button
-            className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 cursor-pointer appearance-none items-center justify-center rounded-full border border-[#62676f] bg-transparent p-0 text-[#c6c6cd]"
+            className="absolute right-1.5 top-1/2 flex h-9 w-9 -translate-y-1/2 cursor-pointer appearance-none items-center justify-center rounded-full border-none bg-transparent p-0 text-[#c6c6cd]"
             title="Search with Amazon Q"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -210,29 +201,29 @@ export function AppTopNavigation() {
         {/* Settings with dropdown */}
         <div ref={settingsRef} className="relative h-full">
           <button
-            className="hidden h-full shrink-0 cursor-pointer appearance-none items-center gap-1 border-none bg-transparent px-4 text-xs font-medium text-[#dedee3] hover:bg-white/5 lg:flex"
+            className={`hidden h-full shrink-0 cursor-pointer appearance-none items-center gap-1 border-none bg-transparent px-4 text-xs font-medium hover:bg-white/5 lg:flex ${settingsOpen ? "text-[#43B4FF]" : "text-[#dedee3]"}`}
             title="Settings"
             onClick={() => setSettingsOpen(!settingsOpen)}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none">
               <path
                 d="M6.11 1.729c.07-.42.44-.729.86-.729h2.02c.43 0 .79.31.86.729l.17.999c.05.29.24.529.5.679.06.03.11.06.17.1.25.15.56.2.84.1l.95-.35c.4-.15.85 0 1.07.38l1.01 1.747c.21.37.13.839-.2 1.108l-.78.64c-.23.189-.34.479-.33.768v.2c0 .29.11.579.33.769l.78.639c.33.27.42.739.2 1.108l-1.01 1.748c-.21.37-.66.529-1.06.38l-.95-.35a.966.966 0 0 0-.84.1c-.06.03-.11.07-.17.1a1.01 1.01 0 0 0-.5.679l-.17.998A.878.878 0 0 1 9 15.27H6.97c-.42 0-.79-.31-.86-.729l-.17-.999a1.01 1.01 0 0 0-.5-.679c-.06-.03-.11-.07-.17-.1a.966.966 0 0 0-.84-.1l-.95.35c-.4.15-.85 0-1.07-.38L1.23 11.04c-.21-.37-.13-.839.2-1.108l.78-.64c.23-.189.34-.479.33-.768v-.2c0-.29-.11-.579-.33-.769l-.78-.639c-.33-.27-.42-.739-.2-1.108L2.24 4.66c.21-.37.66-.529 1.06-.38l.95.35a.966.966 0 0 0 .84-.1c.06-.03.11-.07.17-.1.26-.14.45-.389.5-.679l.17-.999Z"
-                fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
               />
-              <circle cx="8" cy="8" r="2.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <circle cx="8" cy="8" r="2.5" stroke="currentColor" strokeWidth="1.5" />
             </svg>
           </button>
           {settingsOpen && (
-            <div className="absolute right-0 top-12 z-[1001] w-[300px] rounded-lg border border-[#41474f] bg-[#fafafa] shadow-xl dark:bg-[#1a1e25]">
-              <div className="flex items-center gap-2 border-b border-[#e9ebed] px-4 py-3 dark:border-[#41474f]">
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="shrink-0 text-[#5f6b7a]">
+            <div className="absolute right-0 top-12 z-[1001] w-[300px] rounded-lg border border-[#41474f] bg-[#181c24] shadow-xl">
+              {/* Header */}
+              <div className="flex items-center gap-2 border-b border-[#40454d] px-4 py-3">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="shrink-0 text-[#43B4FF]">
                   <path d="M12 1L5 8l7 7" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
                 </svg>
-                <span className="text-sm font-medium text-[#161d26] dark:text-[#ebebf0]">Settings</span>
+                <span className="text-sm font-medium text-[#ebebf0]">Settings</span>
                 <button
-                  className="ml-auto cursor-pointer text-[#5f6b7a] hover:text-[#161d26] dark:hover:text-[#ebebf0]"
+                  className="ml-auto cursor-pointer text-[#9ba1a8] hover:text-[#ebebf0]"
                   onClick={() => setSettingsOpen(false)}
                   aria-label="Close"
                 >
@@ -242,39 +233,48 @@ export function AppTopNavigation() {
                 </button>
               </div>
 
+              {/* Current user settings */}
               <div className="px-4 pt-3">
-                <h3 className="text-sm font-medium text-[#161d26] dark:text-[#ebebf0]">Current user settings</h3>
+                <h3 className="text-sm font-medium text-[#ebebf0]">Current user settings</h3>
               </div>
 
+              {/* Language - English only */}
               <div className="px-4 py-3">
-                <label className="mb-2 block text-xs font-medium text-[#5f6b7a]">Language</label>
-                <select className="h-8 w-full rounded border border-[#8c8c94] bg-white px-2 text-sm text-[#161d26] outline-none dark:bg-[#0f141a] dark:text-[#ebebf0]">
-                  <option>Browser default</option>
-                  <option>English (US)</option>
-                  <option>Japanese</option>
-                  <option>French</option>
-                  <option>German</option>
+                <label className="mb-2 block text-xs font-medium text-[#9ba1a8]">Language</label>
+                <select className="h-8 w-full rounded border border-[#40454d] bg-[#0f141a] px-2 text-sm text-[#ebebf0] outline-none" defaultValue="en-US">
+                  <option value="en-US">English (US)</option>
                 </select>
               </div>
 
-              <div className="px-4 pb-3">
-                <label className="mb-2 block text-xs font-medium text-[#5f6b7a]">
+              {/* Separator */}
+              <div className="mx-4 border-t border-[#40454d]" />
+
+              {/* Visual mode */}
+              <div className="px-4 py-3">
+                <label className="mb-3 block text-xs font-medium text-[#9ba1a8]">
                   Visual mode <i className="not-italic text-[#9ba1a8]">- beta</i>
                 </label>
-                <div className="flex flex-col gap-2">
-                  <label className="flex cursor-pointer items-center gap-2 text-sm text-[#161d26] dark:text-[#ebebf0]">
-                    <input type="radio" name="visual-mode" value="light" checked={theme === "light"} onChange={() => setTheme("light")} className="cursor-pointer" />
+                <div className="flex flex-col gap-3">
+                  <label className="flex cursor-pointer items-center gap-3 text-sm text-[#ebebf0]">
+                    <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${theme === "light" ? "border-[#43B4FF]" : "border-[#5f6b7a]"}`}>
+                      {theme === "light" && <span className="h-2 w-2 rounded-full bg-[#43B4FF]" />}
+                    </span>
+                    <input type="radio" name="visual-mode" value="light" checked={theme === "light"} onChange={() => setTheme("light")} className="sr-only" />
                     Light
                   </label>
-                  <label className="flex cursor-pointer items-center gap-2 text-sm text-[#161d26] dark:text-[#ebebf0]">
-                    <input type="radio" name="visual-mode" value="dark" checked={theme === "dark"} onChange={() => setTheme("dark")} className="cursor-pointer" />
+                  <label className="flex cursor-pointer items-center gap-3 text-sm text-[#ebebf0]">
+                    <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${theme === "dark" ? "border-[#43B4FF]" : "border-[#5f6b7a]"}`}>
+                      {theme === "dark" && <span className="h-2 w-2 rounded-full bg-[#43B4FF]" />}
+                    </span>
+                    <input type="radio" name="visual-mode" value="dark" checked={theme === "dark"} onChange={() => setTheme("dark")} className="sr-only" />
                     Dark
                   </label>
                 </div>
               </div>
 
-              <div className="border-t border-[#e9ebed] px-4 py-3 dark:border-[#41474f]">
-                <a href="#" onClick={(e) => e.preventDefault()} className="text-xs font-medium text-[#006ce0] hover:underline">
+              {/* Footer */}
+              <div className="border-t border-[#40454d] px-4 py-3">
+                <a href="#" onClick={(e) => e.preventDefault()} className="text-xs font-medium text-[#43B4FF] hover:underline">
                   See all user settings
                 </a>
               </div>
@@ -284,115 +284,57 @@ export function AppTopNavigation() {
 
         <span className="hidden h-6 w-px shrink-0 bg-[#40454d] lg:block" aria-hidden="true" />
 
-        <div ref={regionRef} className="relative h-full">
-          <button
-            className="hidden h-full shrink-0 cursor-pointer appearance-none items-center gap-1 border-none bg-transparent px-4 text-xs font-medium text-[#dedee3] hover:bg-white/5 lg:flex"
-            title="Global"
-            onClick={() => setRegionOpen(!regionOpen)}
-          >
-            <span>Global</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-              <path d="M4 11h8L8 5l-4 6z" />
-            </svg>
-          </button>
-          {regionOpen && (
-            <div className="absolute right-0 top-12 z-[1001] w-[340px] rounded-lg border border-[#41474f] bg-[#fafafa] shadow-xl dark:bg-[#1a1e25]">
-              {/* Header */}
-              <div className="flex items-center gap-2 border-b border-[#e9ebed] px-4 py-3 dark:border-[#41474f]">
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="shrink-0 text-[#5f6b7a]">
-                  <path d="M12 1L5 8l7 7" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
-                </svg>
-                <span className="text-sm font-medium text-[#161d26] dark:text-[#ebebf0]">Regions</span>
+        <span
+          className="hidden h-full shrink-0 cursor-default items-center gap-1 px-4 text-xs font-medium text-[#dedee3] lg:flex"
+          title="Global"
+        >
+          Global
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M4 5h8L8 11l-4-6z" />
+          </svg>
+        </span>
+
+        {/* Account section: card attached to top line + name below */}
+        <div className="flex h-full shrink-0 flex-col items-stretch justify-start">
+          {/* Account card attached to top border line */}
+          <Popover
+            triggerType="custom"
+            position="bottom"
+            size="small"
+            dismissButton={false}
+            content={
+              <div className="py-1">
+                <div className="border-b border-[#e9ebed] px-4 py-3 text-sm text-[#161d26]">
+                  {user?.email}
+                </div>
                 <button
-                  className="ml-auto cursor-pointer text-[#5f6b7a] hover:text-[#161d26] dark:hover:text-[#ebebf0]"
-                  onClick={() => setRegionOpen(false)}
-                  aria-label="Close"
+                  className="w-full cursor-pointer px-4 py-3 text-left text-xs font-medium text-[#161d26] hover:bg-[#f2f3f3]"
+                  onClick={() => {
+                    void logout().then(() => router.push("/login"));
+                  }}
                 >
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="m2 1.71 12 12M2 13.71l12-12" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-                  </svg>
+                  Sign out
                 </button>
               </div>
-
-              {/* Info message */}
-              <div className="border-b border-[#e9ebed] px-4 py-2 text-xs text-[#5f6b7a] dark:border-[#41474f] dark:text-[#9ba1a8]">
-                Route 53 does not require region selection.
-              </div>
-
-              {/* Region tabs */}
-              <div className="flex border-b border-[#e9ebed] dark:border-[#41474f]">
-                <button className="flex-1 cursor-pointer border-b-2 border-[#006ce0] px-4 py-2 text-xs font-medium text-[#006ce0]">Regions</button>
-                <button className="flex-1 cursor-pointer border-b-2 border-transparent px-4 py-2 text-xs font-medium text-[#5f6b7a] hover:text-[#161d26] dark:hover:text-[#ebebf0]">Local zones</button>
-              </div>
-
-              {/* Region list */}
-              <div className="max-h-[400px] overflow-y-auto">
-                {[
-                  { header: "United States", regions: [["N. Virginia", "us-east-1"], ["Ohio", "us-east-2"], ["N. California", "us-west-1"], ["Oregon", "us-west-2"]] },
-                  { header: "Asia Pacific", regions: [["Mumbai", "ap-south-1"], ["Osaka", "ap-northeast-3"], ["Seoul", "ap-northeast-2"], ["Singapore", "ap-southeast-1"], ["Sydney", "ap-southeast-2"], ["Tokyo", "ap-northeast-1"]] },
-                  { header: "Canada", regions: [["Central", "ca-central-1"]] },
-                  { header: "Europe", regions: [["Frankfurt", "eu-central-1"], ["Ireland", "eu-west-1"], ["London", "eu-west-2"], ["Paris", "eu-west-3"], ["Stockholm", "eu-north-1"]] },
-                  { header: "South America", regions: [["Sao Paulo", "sa-east-1"]] },
-                ].map((group) => (
-                  <div key={group.header} className="border-b border-[#e9ebed] last:border-b-0 dark:border-[#41474f]">
-                    <h6 className="px-4 pt-3 pb-1 text-xs font-semibold text-[#5f6b7a] dark:text-[#9ba1a8]">{group.header}</h6>
-                    <ul>
-                      {group.regions.map(([name, code]) => (
-                        <li key={code}>
-                          <span className="flex cursor-not-allowed items-center gap-2 px-4 py-1.5 text-sm text-[#9ba1a8] dark:text-[#6b7280]">
-                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="shrink-0 text-[#9ba1a8] dark:text-[#6b7280]">
-                              <path d="M12 7H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1ZM5 7V4c0-1.65 1.35-3 3-3s3 1.35 3 3v3" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none" />
-                            </svg>
-                            <span className="flex-1">{name}</span>
-                            <span className="text-xs text-[#9ba1a8] dark:text-[#6b7280]">{code}</span>
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-
-              {/* Footer */}
-              <div className="border-t border-[#e9ebed] px-4 py-3 text-xs dark:border-[#41474f]">
-                <a href="#" onClick={(e) => e.preventDefault()} className="font-medium text-[#006ce0] hover:underline">Manage Regions</a>
-                <span className="mx-2 text-[#9ba1a8]">|</span>
-                <a href="#" onClick={(e) => e.preventDefault()} className="font-medium text-[#006ce0] hover:underline">Manage local zones</a>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <span className="h-6 w-px shrink-0 bg-[#40454d]" aria-hidden="true" />
-
-        <div ref={menuRef} className="relative h-full">
-          <button
-            className="flex h-full shrink-0 cursor-pointer appearance-none items-center gap-1 whitespace-nowrap border-none bg-transparent px-4 text-xs font-medium text-[#dedee3] hover:bg-white/5"
-            onClick={() => setUserMenuOpen(!userMenuOpen)}
-            title={user?.display_name ?? "Account"}
+            }
           >
-            <span className="text-[#dedee3]">{user?.display_name ?? "Account"}</span>
-            <span className="text-[#9ba1a8]">(888577037798)</span>
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-              <path d="M4 11h8L8 5l-4 6z" />
-            </svg>
-          </button>
-          {userMenuOpen && (
-            <div className="absolute right-0 top-12 z-[1001] min-w-[200px] rounded border border-[#41474f] bg-[#181c24] shadow-lg">
-              <div className="border-b border-[#41474f] px-4 py-3 text-sm text-[#ebebf0]">
-                {user?.email}
-              </div>
-              <button
-                className="w-full cursor-pointer px-4 py-3 text-left text-xs font-medium text-[#dedee3] hover:bg-white/5"
-                onClick={() => {
-                  setUserMenuOpen(false);
-                  void logout().then(() => router.push("/login"));
-                }}
-              >
-                Sign out
-              </button>
-            </div>
-          )}
+            <button
+              className="flex shrink-0 cursor-pointer appearance-none items-center gap-1 whitespace-nowrap border-none bg-[#7f8796] font-medium text-white transition-colors hover:bg-[#8e96a3]"
+              style={{ borderRadius: "0 0 8px 8px", padding: "2px 8px", fontSize: "9px" }}
+              title="Account colour: Unset"
+            >
+              <span>
+                {user?.display_name ?? "Account"} (888577037798)
+              </span>
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M4 11h8L8 5l-4 6z" />
+              </svg>
+            </button>
+          </Popover>
+          {/* Account name below card */}
+          <span className="leading-tight text-[#9ba1a8]" style={{ padding: "0 8px", fontSize: "8px" }}>
+            {user?.display_name ?? "Account"}
+          </span>
         </div>
       </div>
     </nav>

@@ -1,14 +1,306 @@
 /* Custom global styles (Tailwind utilities are loaded via /tailwind.css link) */
 
+/* CSS custom properties — single source of truth for all colors.
+   Values mirror src/lib/theme/colors.ts. Change there AND here. */
+:root {
+  /* Dark mode */
+  --r53-dark-bg: #161D26;
+  --r53-dark-surface: #181c24;
+  --r53-dark-surface-alt: #0f141a;
+  --r53-dark-input-bg: #161D26;
+  --r53-dark-content-bg: #131920;
+  --r53-dark-sidebar-bg: #161D26;
+  --r53-dark-breadcrumb-bg: #161D26;
+  --r53-dark-card-bg: #161D26;
+  --r53-dark-border: #656871;
+  --r53-dark-border-alt: #40454d;
+  --r53-dark-border-strong: #41474f;
+  --r53-dark-text-primary: #ebebf0;
+  --r53-dark-text-secondary: #dedee3;
+  --r53-dark-text-muted: #9ba1a8;
+  --r53-dark-text-dim: #5f6b7a;
+  --r53-dark-accent: #43B4FF;
+  --r53-dark-accent-hover: #1c7ae3;
+  --r53-dark-account-card: #7f8796;
+  --r53-dark-account-card-hover: #8e96a3;
+  --r53-dark-toggle-active: #0073bb;
+  --r53-dark-toggle-active-hover: #0a4d8c;
+
+  /* Light mode */
+  --r53-light-bg: #FCFCFD;
+  --r53-light-surface: #ffffff;
+  --r53-light-surface-alt: #f7f7f7;
+  --r53-light-content-bg: #FCFCFD;
+  --r53-light-sidebar-bg: #ffffff;
+  --r53-light-breadcrumb-bg: #ffffff;
+  --r53-light-card-bg: #ffffff;
+  --r53-light-border: #e9ebed;
+  --r53-light-border-alt: #d5dbdb;
+  --r53-light-text-primary: #0f141a;
+  --r53-light-text-muted: #687078;
+  --r53-light-accent: #1677E2;
+  --r53-light-accent-hover: #0a3a8f;
+  --r53-light-input-border: #8c8c94;
+
+  /* Shared */
+  --r53-shared-white: #ffffff;
+  --r53-shared-error: #d13212;
+  --r53-shared-error-bg: #fff4f4;
+  --r53-shared-info-bg: #f0f4ff;
+  --r53-shared-info-bg-alt: #e9f3ff;
+  --r53-shared-info-bg-light: #f0fbff;
+  --r53-shared-overlay: #424650;
+  --r53-shared-separator: #72747d;
+
+  /* AWS brand */
+  --r53-aws-orange: #ff9900;
+
+  /* Dropdown defaults (light mode) */
+  --r53-dropdown-bg: #ffffff;
+  --r53-dropdown-border: #e9ebed;
+  --r53-dropdown-text: #0f141a;
+  --r53-dropdown-text-muted: #687078;
+  --r53-dropdown-accent: #1677E2;
+  --r53-dropdown-input-bg: #ffffff;
+  --r53-dropdown-input-border: #8c8c94;
+}
+
+/* Dropdown dark mode overrides */
+.awsui-dark-mode {
+  --r53-dropdown-bg: #161D26;
+  --r53-dropdown-border: #656871;
+  --r53-dropdown-text: #ebebf0;
+  --r53-dropdown-text-muted: #9ba1a8;
+  --r53-dropdown-accent: #43B4FF;
+  --r53-dropdown-input-bg: #161D26;
+  --r53-dropdown-input-border: #656871;
+}
+
 /* Amazon Ember is AWS's proprietary font. We use the same fallback stack
    that AWS itself uses on its console pages. */
 body {
   margin: 0;
   font-family: "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
-  color: #0f141a;
-  background-color: #fafafa;
+  color: var(--r53-light-text-primary);
+  background-color: var(--r53-light-bg);
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+/* Hide Cloudscape's built-in tools and navigation triggers (we use our own in the toolbar) */
+[data-testid="awsui-app-layout-trigger-awsui-internal-tools"],
+[data-testid="side-split-panel-drawer"],
+[data-testid="awsui-app-layout-trigger-navigation"] {
+  display: none !important;
+}
+
+/* Hide Cloudscape's duplicate nav toggle drawer */
+.awsui_show-navigation_hyvsj_130uw_739 > .awsui_trigger-wrapper_hyvsj_130uw_1277 {
+  display: none !important;
+}
+
+/* Blue circle background for active toggle buttons in breadcrumb toolbar */
+.r53-toggle-active button {
+  background-color: var(--r53-dark-toggle-active) !important;
+  border-radius: 50% !important;
+  color: var(--r53-shared-white) !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.r53-toggle-active button:hover {
+  background-color: var(--r53-dark-toggle-active-hover) !important;
+}
+
+/* Ensure icon color is visible in dark mode for toggle buttons */
+.awsui-dark-mode .r53-toggle-active button {
+  color: #161D26 !important;
+}
+
+/* Ensure inactive toggle icons are visible in dark mode breadcrumb toolbar */
+.awsui-dark-mode section[aria-label="Toolbar"] button {
+  color: var(--r53-shared-white) !important;
+}
+.awsui-dark-mode section[aria-label="Toolbar"] button:hover {
+  color: var(--r53-dark-accent) !important;
+}
+
+/* Italic placeholder text globally */
+input::placeholder,
+textarea::placeholder {
+  font-style: italic;
+}
+
+/* Dark mode input backgrounds match top nav */
+.awsui-dark-mode input[type="text"],
+.awsui-dark-mode input[type="search"],
+.awsui-dark-mode input[type="email"],
+.awsui-dark-mode input[type="password"],
+.awsui-dark-mode input[type="number"],
+.awsui-dark-mode textarea,
+.awsui-dark-mode select {
+  background-color: var(--r53-dark-input-bg) !important;
+}
+
+/* Dark mode overrides for toolbar (light-mode vars get swapped) */
+.awsui-dark-mode section[aria-label="Toolbar"] {
+  background-color: var(--r53-dark-breadcrumb-bg) !important;
+  border-color: var(--r53-dark-border-alt) !important;
+}
+
+/* Dark mode breadcrumb text color */
+.awsui-dark-mode section[aria-label="Toolbar"] .awsui_breadcrumb-group a,
+.awsui-dark-mode section[aria-label="Toolbar"] .awsui_breadcrumb-group button {
+  color: var(--r53-dark-text-secondary) !important;
+}
+.awsui-dark-mode section[aria-label="Toolbar"] .awsui_breadcrumb-group a:hover,
+.awsui-dark-mode section[aria-label="Toolbar"] .awsui_breadcrumb-group button:hover {
+  color: var(--r53-dark-accent) !important;
+}
+
+/* Dark mode footer - footer is always dark themed */
+.awsui-dark-mode footer[data-testid="awsc-nav-footer"] button {
+  color: var(--r53-shared-white) !important;
+}
+
+/* Dark mode sidebar background */
+.awsui-dark-mode [class*="awsui_navigation_hyvsj"],
+.awsui-dark-mode [class*="awsui_sidebar_hyvsj"] {
+  background-color: var(--r53-dark-sidebar-bg) !important;
+}
+
+/* Dark mode main content background */
+.awsui-dark-mode [class*="awsui_content_hyvsj"] {
+  background-color: var(--r53-dark-content-bg) !important;
+}
+
+/* Dark mode cards inside main content */
+.awsui-dark-mode [class*="awsui_content_hyvsj"] [class*="awsui_container"],
+.awsui-dark-mode [class*="awsui_content_hyvsj"] .awsui_container {
+  background-color: var(--r53-dark-card-bg) !important;
+}
+
+/* More resources list with separators (matches AWS console) */
+.home-page__list-separator {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.home-page__list-separator li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--r53-light-border);
+  border-bottom-width: 1px;
+}
+.home-page__list-separator li:last-child {
+  border-bottom: none;
+}
+.awsui-dark-mode .home-page__list-separator li {
+  border-bottom-color: #373C46;
+}
+
+/* Side navigation "New" info tag - blue, bold, dotted underline */
+.awsui_side-navigation [class*="awsui_info"] > div,
+.awsui_side-navigation .awsui_info {
+  color: var(--r53-light-accent) !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
+  text-decoration: underline dotted !important;
+  cursor: pointer !important;
+}
+.awsui-dark-mode .awsui_side-navigation [class*="awsui_info"] > div,
+.awsui-dark-mode .awsui_side-navigation .awsui_info {
+  color: var(--r53-dark-accent) !important;
+}
+
+/* Remove column dividers and borders in text-grid ColumnLayout (resource statistics widget) */
+.awsui_column-layout [class*="awsui_divider_x7peu"],
+.awsui_column-layout [class*="awsui_grid-column"] [class*="awsui_divider"],
+.awsui_column-layout [class*="awsui_item"] {
+  border-right: none !important;
+  border-left: none !important;
+}
+.awsui_column-layout [class*="awsui_divider_x7peu"] {
+  display: none !important;
+}
+
+/* Remove divider after Route 53 header in side navigation */
+.awsui_side-navigation > [class*="awsui_header"] + [class*="awsui_divider"],
+.awsui_side-navigation [class*="awsui_header-hr"] {
+  display: none !important;
+}
+
+/* Smooth slide animation for sidebar open/close */
+/* Override Cloudscape's display:none on closed drawer to enable slide animation */
+[class*="awsui_drawer-closed"][class*="awsui_drawer-mobile"] {
+  display: block !important;
+}
+[class*="awsui_drawer-closed"] > [class*="awsui_drawer-content"] {
+  display: block !important;
+}
+
+/* Sidebar drawer slides instead of disappearing */
+[class*="awsui_drawer"] {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease-out !important;
+  overflow: hidden !important;
+}
+
+/* When closed, slide sidebar off-screen to the left */
+[class*="awsui_drawer-closed"] {
+  transform: translateX(-100%) !important;
+  width: 0 !important;
+  opacity: 0 !important;
+  display: block !important;
+}
+
+/* Content area shifts smoothly when sidebar toggles */
+[class*="awsui_content_hyvsj"],
+[class*="awsui_main_hyvsj"] {
+  transition: padding-left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* AWS orange primary action buttons (#FF9902) */
+.r53-btn-primary button,
+.r53-btn-primary > a {
+  background-color: #FF9902 !important;
+  border-color: #FF9902 !important;
+  color: #161D26 !important;
+  font-weight: 600 !important;
+}
+.r53-btn-primary button:hover,
+.r53-btn-primary > a:hover {
+  background-color: #ec721f !important;
+  border-color: #ec721f !important;
+}
+
+/* All Cloudscape primary variant buttons use AWS orange */
+.awsui_button.awsui_variant-primary,
+[class*="awsui_button"][class*="awsui_variant-primary"] {
+  background-color: #FF9902 !important;
+  border-color: #FF9902 !important;
+  color: #161D26 !important;
+  font-weight: 600 !important;
+}
+.awsui_button.awsui_variant-primary:hover,
+[class*="awsui_button"][class*="awsui_variant-primary"]:hover {
+  background-color: #ec721f !important;
+  border-color: #ec721f !important;
+}
+
+/* Force all Cloudscape links to use our app blue, not Cloudscape's default */
+.awsui_link,
+[class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
+  color: var(--r53-light-accent) !important;
+}
+.awsui-dark-mode .awsui_link,
+.awsui-dark-mode [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
+  color: var(--r53-dark-accent) !important;
 }

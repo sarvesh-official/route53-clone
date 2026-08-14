@@ -6,6 +6,20 @@ import { useState } from "react";
 import { isApiError } from "@/lib/api/errors";
 import { useAuth } from "@/providers/auth-provider";
 
+/* CSS variable shortcuts for inline use.
+   All values are defined in src/app/globals.css :root */
+const c = {
+  lightTextPrimary: "var(--r53-light-text-primary)",
+  lightTextMuted: "var(--r53-light-text-muted)",
+  lightAccent: "var(--r53-light-accent)",
+  lightInputBorder: "var(--r53-light-input-border)",
+  awsOrange: "var(--r53-aws-orange)",
+  sharedWhite: "var(--r53-shared-white)",
+  sharedError: "var(--r53-shared-error)",
+  sharedErrorBg: "var(--r53-shared-error-bg)",
+  darkAccentHover: "var(--r53-dark-accent-hover)",
+} as const;
+
 type AccountType = "root" | "iam";
 
 export function LoginForm() {
@@ -55,14 +69,23 @@ export function LoginForm() {
 
   // Cloudscape's reset forces font-size: 100% on inputs/buttons, which
   // overrides Tailwind utilities. Inline styles bypass that.
-  const inputStyle = { fontSize: "14px" };
+  const inputStyle = {
+    fontSize: "14px",
+    borderColor: c.lightInputBorder,
+    color: c.lightTextPrimary,
+  };
   const inputCls =
-    "r53-input h-8 w-full rounded-lg border border-[#8c8c94] bg-white px-3 py-[5px] text-[#0f141a] outline-none box-border transition-colors";
-  const labelCls = "mb-1 block font-medium text-[#0f141a]";
-  const labelStyle = { fontSize: "14px" };
+    "r53-input h-8 w-full rounded-lg border bg-white px-3 py-[5px] outline-none box-border transition-colors";
+  const labelCls = "mb-1 block font-medium";
+  const labelStyle = { fontSize: "14px", color: c.lightTextPrimary };
   const primaryBtnCls =
-    "h-8 w-full cursor-pointer appearance-none rounded-full border-2 border-[#ff9900] bg-[#ff9900] font-medium text-[#0f141a]";
-  const primaryBtnStyle = { fontSize: "14px" };
+    "h-8 w-full cursor-pointer appearance-none rounded-full border-2 font-medium";
+  const primaryBtnStyle = {
+    fontSize: "14px",
+    borderColor: c.awsOrange,
+    backgroundColor: c.awsOrange,
+    color: c.lightTextPrimary,
+  };
 
   const slideStyle: React.CSSProperties = {
     animation: `${direction === "forward" ? "r53-slide-in-right" : "r53-slide-in-left"} 0.3s ease-out`,
@@ -82,7 +105,10 @@ export function LoginForm() {
       `}</style>
 
       <div key={step} style={slideStyle}>
-        <h2 className="mb-1 mt-0 text-xl font-medium leading-6 text-[#0f141a]">
+        <h2
+          className="mb-1 mt-0 text-xl font-medium leading-6"
+          style={{ color: c.lightTextPrimary }}
+        >
           {step === 1
             ? "Sign In"
             : accountType === "root"
@@ -91,7 +117,10 @@ export function LoginForm() {
         </h2>
 
         {step === 1 && (
-          <p className="mb-4 text-sm font-normal leading-5 text-[#687078]">
+          <p
+            className="mb-4 text-sm font-normal leading-5"
+            style={{ color: c.lightTextMuted }}
+          >
             Access your AWS account by user type. Use the root user email to
             sign in with root account credentials, or an IAM user name to sign
             in with IAM credentials.
@@ -99,7 +128,10 @@ export function LoginForm() {
         )}
 
         {step === 2 && (
-          <p className="mb-4 text-sm font-normal leading-5 text-[#687078]">
+          <p
+            className="mb-4 text-sm font-normal leading-5"
+            style={{ color: c.lightTextMuted }}
+          >
             Enter the password for
           </p>
         )}
@@ -116,22 +148,28 @@ export function LoginForm() {
                 onClick={() => setAccountType(type)}
                 className="flex w-full cursor-pointer items-start gap-2 rounded-lg border px-3 pb-3 pt-2"
                 style={{
-                  border: selected ? "2px solid #006ce0" : "1px solid #8c8c94",
-                  backgroundColor: selected ? "#f0fbff" : "#fff",
+                  border: selected ? `2px solid ${c.lightAccent}` : `1px solid ${c.lightInputBorder}`,
+                  backgroundColor: selected ? "#f0fbff" : c.sharedWhite,
                 }}
               >
                 <span
                   className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 bg-white"
                   style={{
-                    borderColor: selected ? "#006ce0" : "#8c8c94",
+                    borderColor: selected ? c.lightAccent : c.lightInputBorder,
                   }}
                 >
                   {selected && (
-                    <span className="h-2 w-2 rounded-full bg-[#006ce0]" />
+                    <span
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: c.lightAccent }}
+                    />
                   )}
                 </span>
                 <div>
-                  <div className="text-sm font-semibold text-[#0f141a]">
+                  <div
+                    className="text-sm font-semibold"
+                    style={{ color: c.lightTextPrimary }}
+                  >
                     {type === "root" ? "Root user" : "IAM user"}
                   </div>
                   <div className="mt-0.5 text-xs font-normal text-[#424650]">
@@ -151,7 +189,14 @@ export function LoginForm() {
           <form onSubmit={onNext}>
             <div className="flex flex-col gap-4">
               {error && (
-                <div className="rounded-lg border border-[#d13212] bg-[#fff4f4] px-3.5 py-2.5 text-sm text-[#d13212]">
+                <div
+                  className="rounded-lg border px-3.5 py-2.5 text-sm"
+                  style={{
+                    borderColor: c.sharedError,
+                    backgroundColor: c.sharedErrorBg,
+                    color: c.sharedError,
+                  }}
+                >
                   <strong>There was a problem</strong>
                   <div className="mt-1">{error}</div>
                 </div>
@@ -175,7 +220,10 @@ export function LoginForm() {
                   className={`${inputCls} placeholder-italic`}
                   style={inputStyle}
                 />
-                <div className="mt-1 text-xs text-[#687078]">
+                <div
+                  className="mt-1 text-xs"
+                  style={{ color: c.lightTextMuted }}
+                >
                   Demo: demo@example.com
                 </div>
               </div>
@@ -186,7 +234,12 @@ export function LoginForm() {
 
               <div className="flex items-center gap-3 py-1">
                 <div className="h-px flex-1 bg-[#d5dbdb]" />
-                <strong className="text-xs font-normal text-[#687078]">OR</strong>
+                <strong
+                  className="text-xs font-normal"
+                  style={{ color: c.lightTextMuted }}
+                >
+                  OR
+                </strong>
                 <div className="h-px flex-1 bg-[#d5dbdb]" />
               </div>
 
@@ -194,7 +247,7 @@ export function LoginForm() {
                 type="button"
                 onClick={() => router.push("/signup")}
                 className="h-8 w-full cursor-pointer appearance-none rounded-full border-2 bg-white px-4 font-medium"
-                style={{ fontSize: "14px", color: "#006ce0", borderColor: "#006ce0" }}
+                style={{ fontSize: "14px", color: c.lightAccent, borderColor: c.lightAccent }}
               >
                 New to AWS? Sign up
               </button>
@@ -204,19 +257,26 @@ export function LoginForm() {
           <form onSubmit={onSignIn}>
             <div className="flex flex-col gap-4">
               {error && (
-                <div className="rounded-lg border border-[#d13212] bg-[#fff4f4] px-3.5 py-2.5 text-sm text-[#d13212]">
+                <div
+                  className="rounded-lg border px-3.5 py-2.5 text-sm"
+                  style={{
+                    borderColor: c.sharedError,
+                    backgroundColor: c.sharedErrorBg,
+                    color: c.sharedError,
+                  }}
+                >
                   <strong>There was a problem</strong>
                   <div className="mt-1">{error}</div>
                 </div>
               )}
 
-              <div className="text-sm text-[#0f141a]">
+              <div className="text-sm" style={{ color: c.lightTextPrimary }}>
                 <strong className="font-semibold">{email} </strong>
                 <button
                   type="button"
                   onClick={goBack}
                   className="cursor-pointer appearance-none border-none bg-transparent p-0 font-normal no-underline"
-                  style={{ fontSize: "14px", color: "#1C7AE3" }}
+                  style={{ fontSize: "14px", color: c.darkAccentHover }}
                 >
                   (not you?)
                 </button>
@@ -237,19 +297,25 @@ export function LoginForm() {
                   className={`${inputCls} placeholder-italic`}
                   style={inputStyle}
                 />
-                <div className="mt-1 text-xs text-[#687078]">
+                <div
+                  className="mt-1 text-xs"
+                  style={{ color: c.lightTextMuted }}
+                >
                   Demo: demo1234
                 </div>
               </div>
 
               <div className="flex items-center justify-between">
-                <label className="flex cursor-pointer items-center gap-2 text-sm text-[#0f141a]">
+                <label
+                  className="flex cursor-pointer items-center gap-2 text-sm"
+                  style={{ color: c.lightTextPrimary }}
+                >
                   <span
                     onClick={() => setShowPassword(!showPassword)}
                     className="flex h-4 w-4 shrink-0 items-center justify-center rounded border-2"
                     style={{
-                      borderColor: showPassword ? "#006ce0" : "#8c8c94",
-                      backgroundColor: showPassword ? "#006ce0" : "#fff",
+                      borderColor: showPassword ? c.lightAccent : c.lightInputBorder,
+                      backgroundColor: showPassword ? c.lightAccent : c.sharedWhite,
                     }}
                   >
                     {showPassword && (
@@ -270,7 +336,7 @@ export function LoginForm() {
                   href="#"
                   onClick={(e) => e.preventDefault()}
                   className="cursor-pointer font-normal no-underline"
-                  style={{ fontSize: "14px", color: "#1C7AE3" }}
+                  style={{ fontSize: "14px", color: c.darkAccentHover }}
                 >
                   Forgot password?
                 </a>
@@ -282,6 +348,9 @@ export function LoginForm() {
                 className={primaryBtnCls}
                 style={{
                   fontSize: "14px",
+                  borderColor: c.awsOrange,
+                  backgroundColor: c.awsOrange,
+                  color: c.lightTextPrimary,
                   opacity: submitting ? 0.6 : 1,
                   cursor: submitting ? "not-allowed" : "pointer",
                 }}
@@ -293,7 +362,7 @@ export function LoginForm() {
                 type="button"
                 onClick={goBack}
                 className="h-8 w-full cursor-pointer appearance-none rounded-full border border-[#d5dbdb] bg-white px-4 font-medium"
-                style={{ fontSize: "14px", color: "#1C7AE3" }}
+                style={{ fontSize: "14px", color: c.darkAccentHover }}
               >
                 Sign in to a different account
               </button>
@@ -302,8 +371,8 @@ export function LoginForm() {
                 <button
                   type="button"
                   onClick={() => router.push("/signup")}
-                  className="cursor-pointer appearance-none border-none bg-transparent p-0 font-normal text-[#006ce0] no-underline"
-                  style={{ fontSize: "14px" }}
+                  className="cursor-pointer appearance-none border-none bg-transparent p-0 font-normal no-underline"
+                  style={{ fontSize: "14px", color: c.lightAccent }}
                 >
                   Create a new AWS account
                 </button>
