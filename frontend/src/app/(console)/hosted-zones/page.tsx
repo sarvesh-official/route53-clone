@@ -78,7 +78,7 @@ export default function HostedZonesPage() {
 
   return (
     <>
-    <Box padding={{ top: "m", horizontal: "l" }}>
+    <Box padding={{ top: "xs", horizontal: "m" }}>
       <SpaceBetween size="l">
         <Header
           variant="h1"

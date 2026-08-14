@@ -9,6 +9,8 @@ duplicating data. Run it with:
 
 from __future__ import annotations
 
+from datetime import timedelta
+
 import bcrypt
 from sqlalchemy.orm import Session
 
@@ -17,6 +19,7 @@ from app.core.database import SessionLocal, engine
 from app.core.ids import generate_record_id, generate_zone_id
 from app.models import DnsRecord, HostedZone, User
 from app.models.base import Base, uuid4_str
+from app.models.base import utcnow
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -72,8 +75,12 @@ def _make_zone(db: Session, user_id: str, name: str, zone_type: str, comment: st
     return zone
 
 
-def _make_extra_records(db: Session, zone_id: str, zone_name: str) -> None:
-    """Add a few user-created records to make the demo look realistic."""
+def _make_extra_records(db: Session, zone_id: str, zone_name: str, days_ago: int = 0) -> None:
+    """Add a few user-created records to make the demo look realistic.
+
+    days_ago shifts created_at back so the activity feed shows spread data.
+    """
+    base = utcnow() - timedelta(days=days_ago)
     records = [
         DnsRecord(
             id=generate_record_id(),
@@ -83,6 +90,7 @@ def _make_extra_records(db: Session, zone_id: str, zone_name: str) -> None:
             ttl=300,
             value="192.0.2.1",
             routing_policy="SIMPLE",
+            created_at=base,
         ),
         DnsRecord(
             id=generate_record_id(),
@@ -92,6 +100,7 @@ def _make_extra_records(db: Session, zone_id: str, zone_name: str) -> None:
             ttl=300,
             value="192.0.2.2",
             routing_policy="SIMPLE",
+            created_at=base - timedelta(hours=2),
         ),
         DnsRecord(
             id=generate_record_id(),
@@ -101,6 +110,7 @@ def _make_extra_records(db: Session, zone_id: str, zone_name: str) -> None:
             ttl=3600,
             value="10 mail.example.com.\n20 mail2.example.com.",
             routing_policy="SIMPLE",
+            created_at=base - timedelta(hours=5),
         ),
         DnsRecord(
             id=generate_record_id(),
@@ -110,6 +120,7 @@ def _make_extra_records(db: Session, zone_id: str, zone_name: str) -> None:
             ttl=3600,
             value='"v=spf1 include:_spf.example.com ~all"',
             routing_policy="SIMPLE",
+            created_at=base - timedelta(hours=8),
         ),
     ]
     db.add_all(records)
@@ -155,10 +166,10 @@ def seed(db: Session | None = None) -> None:
         # Demo user gets two zones with full record sets
         demo_user = created_users[0][0]
         zone1 = _make_zone(db, demo_user.id, "example.com.", "PUBLIC", "Main production zone")
-        _make_extra_records(db, zone1.id, "example.com.")
+        _make_extra_records(db, zone1.id, "example.com.", days_ago=1)
 
         zone2 = _make_zone(db, demo_user.id, "staging.example.com.", "PUBLIC", "Staging environment")
-        _make_extra_records(db, zone2.id, "staging.example.com.")
+        _make_extra_records(db, zone2.id, "staging.example.com.", days_ago=0)
 
         zone1.record_count = 2 + 4  # NS + SOA + 4 extra
         zone2.record_count = 2 + 4
@@ -166,13 +177,13 @@ def seed(db: Session | None = None) -> None:
         # Alice gets a zone
         alice = created_users[1][0]
         zone3 = _make_zone(db, alice.id, "alice.io.", "PUBLIC", "Personal blog")
-        _make_extra_records(db, zone3.id, "alice.io.")
+        _make_extra_records(db, zone3.id, "alice.io.", days_ago=2)
         zone3.record_count = 2 + 4
 
         # Bob gets a zone
         bob = created_users[2][0]
         zone4 = _make_zone(db, bob.id, "bob.dev.", "PUBLIC", "Portfolio")
-        _make_extra_records(db, zone4.id, "bob.dev.")
+        _make_extra_records(db, zone4.id, "bob.dev.", days_ago=3)
         zone4.record_count = 2 + 4
 
         db.commit()

@@ -67,10 +67,31 @@ export function AppSideNavigation() {
   const router = useRouter();
   const pathname = usePathname();
 
+  // Normalize active href: for nested routes like /hosted-zones/ZTC123,
+  // highlight the parent /hosted-zones link
+  const activeHref = (() => {
+    if (!pathname) return "/dashboard";
+    const segments = pathname.split("/").filter(Boolean);
+    if (segments.length <= 1) return pathname;
+    // Match the longest sidebar href that is a prefix of the current path
+    const allHrefs = ITEMS.flatMap(function collect(item): string[] {
+      if (item.type === "link") return [item.href];
+      if (item.type === "link-group") return [item.href, ...item.items.flatMap(collect)];
+      if (item.type === "expandable-link-group") return [item.href, ...item.items.flatMap(collect)];
+      if (item.type === "section") return item.items.flatMap(collect);
+      if (item.type === "section-group") return item.items.flatMap(collect);
+      return [];
+    });
+    const match = allHrefs
+      .filter((h) => pathname === h || pathname.startsWith(h + "/"))
+      .sort((a, b) => b.length - a.length)[0];
+    return match ?? pathname;
+  })();
+
   return (
     <SideNavigation
       header={{ text: "Route 53", href: "/dashboard" }}
-      activeHref={pathname ?? "/dashboard"}
+      activeHref={activeHref}
       items={ITEMS}
       onFollow={(e) => {
         e.preventDefault();

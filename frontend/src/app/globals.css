@@ -227,6 +227,16 @@ textarea::placeholder {
   display: none !important;
 }
 
+/* Center align Header titles inside resource statistics columns */
+.awsui_column-layout [class*="awsui_item"] [class*="awsui_header"] {
+  text-align: center !important;
+  justify-content: center !important;
+}
+.awsui_column-layout [class*="awsui_item"] [class*="awsui_header"] [class*="awsui_header-text"],
+.awsui_column-layout [class*="awsui_item"] [class*="awsui_header"] > * {
+  text-align: center !important;
+}
+
 /* Remove divider after Route 53 header in side navigation */
 .awsui_side-navigation > [class*="awsui_header"] + [class*="awsui_divider"],
 .awsui_side-navigation [class*="awsui_header-hr"] {

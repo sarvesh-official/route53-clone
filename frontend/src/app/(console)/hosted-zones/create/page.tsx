@@ -54,7 +54,7 @@ export default function CreateHostedZonePage() {
   };
 
   return (
-    <Box padding={{ top: "m", horizontal: "l" }}>
+    <Box padding={{ top: "xs", horizontal: "m" }}>
       <form
         onSubmit={(e) => {
           e.preventDefault();

@@ -130,15 +130,17 @@ export default function DashboardPage() {
             <FormField
               constraintText="Each label (each part between dots) can be up to 63 characters long and must start with a-z or 0-9. Maximum length: 255 characters, including dots. Valid characters: a-z, 0-9, and - (hyphen)"
             >
-              <input
-                type="text"
-                placeholder="Enter a domain name"
-                value={domainInput}
-                onChange={(e) => setDomainInput(e.target.value)}
-                className="h-8 w-full rounded-lg border px-3 py-[5px] text-sm outline-none"
-                style={{ borderColor: c.lightInputBorder }}
-                aria-label="Find and register an available domain."
-              />
+              <div style={{ maxWidth: "800px" }}>
+                <input
+                  type="text"
+                  placeholder="Enter a domain name"
+                  value={domainInput}
+                  onChange={(e) => setDomainInput(e.target.value)}
+                  className="h-8 w-full rounded-lg border px-3 py-[5px] text-sm outline-none"
+                  style={{ borderColor: c.lightInputBorder }}
+                  aria-label="Find and register an available domain."
+                />
+              </div>
             </FormField>
             <Button onClick={handleCheckDomain}>Check</Button>
             {domainCheckMsg && (

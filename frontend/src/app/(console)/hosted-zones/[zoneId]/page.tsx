@@ -1,7 +1,7 @@
 "use client";
 
 import Alert from "@cloudscape-design/components/alert";
-import ContentLayout from "@cloudscape-design/components/content-layout";
+import Box from "@cloudscape-design/components/box";
 import Header from "@cloudscape-design/components/header";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Spinner from "@cloudscape-design/components/spinner";
@@ -29,28 +29,39 @@ export default function HostedZoneDetailPage({ params }: PageProps) {
 
   if (isLoading) {
     return (
-      <ContentLayout header={<Header variant="h1">Hosted zone</Header>}>
-        <Spinner size="large" />
-      </ContentLayout>
+      <Box padding={{ top: "xs", horizontal: "m" }}>
+        <Header variant="h1">Hosted zone</Header>
+        <Box padding={{ top: "l" }}>
+          <Spinner size="large" />
+        </Box>
+      </Box>
     );
   }
 
   if (error || !zone) {
     return (
-      <ContentLayout header={<Header variant="h1">Hosted zone not found</Header>}>
-        <Alert type="error" header="Could not load hosted zone">
-          {error?.message ?? "The hosted zone may have been deleted."}
-        </Alert>
-      </ContentLayout>
+      <Box padding={{ top: "xs", horizontal: "m" }}>
+        <Header variant="h1">Hosted zone not found</Header>
+        <Box padding={{ top: "l" }}>
+          <Alert type="error" header="Could not load hosted zone">
+            {error?.message ?? "The hosted zone may have been deleted."}
+          </Alert>
+        </Box>
+      </Box>
     );
   }
 
   return (
-    <ContentLayout header={<Header variant="h1">{displayDomain(zone.name)}</Header>}>
-      <SpaceBetween size="l">
+    <SpaceBetween size="l">
+      <Box padding={{ top: "xs", horizontal: "m" }}>
+        <Header variant="h1">{displayDomain(zone.name)}</Header>
+      </Box>
+      <Box padding={{ horizontal: "m" }}>
         <ZoneHeader zone={zone} />
+      </Box>
+      <Box padding={{ horizontal: "m" }}>
         <RecordsTable zone={zone} />
-      </SpaceBetween>
-    </ContentLayout>
+      </Box>
+    </SpaceBetween>
   );
 }

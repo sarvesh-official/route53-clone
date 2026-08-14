@@ -11,7 +11,7 @@ interface ComingSoonProps {
 
 export default function ComingSoon({ title, description }: ComingSoonProps) {
   return (
-    <Box padding="l">
+    <Box padding={{ top: "xs", horizontal: "m" }}>
       <Header variant="h1">{title}</Header>
       <Box padding={{ top: "l" }}>
         <Alert

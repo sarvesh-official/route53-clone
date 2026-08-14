@@ -59,7 +59,7 @@ export default function EditHostedZonePage() {
 
   if (!zone) {
     return (
-      <Box padding={{ top: "m", horizontal: "l" }}>
+      <Box padding={{ top: "xs", horizontal: "m" }}>
         <Header variant="h1">Hosted zone not found</Header>
         <Box padding={{ top: "s" }}>
           <Button href="/hosted-zones">Back to hosted zones</Button>
@@ -69,7 +69,7 @@ export default function EditHostedZonePage() {
   }
 
   return (
-    <Box padding={{ top: "m", horizontal: "l" }}>
+    <Box padding={{ top: "xs", horizontal: "m" }}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
