@@ -25,7 +25,7 @@ export default function HostedZonesPage() {
   const [page, setPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState<HostedZone[]>([]);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["zones", { page, search }],
     queryFn: () => zonesApi.list({ page, page_size: 10, search }),
   });
@@ -111,20 +111,19 @@ export default function HostedZonesPage() {
 
         <Container>
           <SpaceBetween size="l">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div style={{ position: "relative", width: 648 }}>
-                <span
-                  style={{
-                    position: "absolute",
-                    left: 12,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    color: "#687078",
-                    fontSize: 14,
-                    pointerEvents: "none",
-                  }}
-                >
-                  &#128269;
+            <div className="flex items-center justify-between">
+              <div className="relative w-[648px]">
+                <span className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-[#687078]">
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                    <path
+                      d="m11 11 4 4M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10Z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </span>
                 <Input
                   value={search}
@@ -136,7 +135,7 @@ export default function HostedZonesPage() {
                   type="search"
                 />
               </div>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <div className="flex items-center gap-2">
                 <Pagination
                   currentPageIndex={page}
                   pagesCount={Math.ceil(totalZones / 10)}
@@ -181,11 +180,6 @@ export default function HostedZonesPage() {
                   header: "Record count",
                   cell: (item: HostedZone) => item.record_count,
                   sortingField: "record_count",
-                },
-                {
-                  id: "description",
-                  header: "Description",
-                  cell: (item: HostedZone) => item.comment || "-",
                 },
                 {
                   id: "id",
