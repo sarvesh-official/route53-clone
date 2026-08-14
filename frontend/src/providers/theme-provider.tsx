@@ -16,6 +16,7 @@ const STORAGE_KEY = "r53.theme";
 interface ThemeContextValue {
   theme: Theme;
   toggle: () => void;
+  setTheme: (t: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -50,15 +51,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     applyMode(next === "dark" ? Mode.Dark : Mode.Light);
     try {
       window.localStorage.setItem(STORAGE_KEY, next);
-      // Manually dispatch a storage event so useSyncExternalStore updates
       window.dispatchEvent(new StorageEvent("storage", { key: STORAGE_KEY }));
     } catch {
       // ignore quota errors
     }
   }, [theme]);
 
+  const setTheme = useCallback((t: Theme) => {
+    applyMode(t === "dark" ? Mode.Dark : Mode.Light);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, t);
+      window.dispatchEvent(new StorageEvent("storage", { key: STORAGE_KEY }));
+    } catch {
+      // ignore quota errors
+    }
+  }, []);
+
   return (
-    <ThemeContext.Provider value={{ theme, toggle }}>
+    <ThemeContext.Provider value={{ theme, toggle, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );
