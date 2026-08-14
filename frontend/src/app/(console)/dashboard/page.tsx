@@ -7,11 +7,18 @@ import Container from "@cloudscape-design/components/container";
 import Header from "@cloudscape-design/components/header";
 import Link from "@cloudscape-design/components/link";
 import SpaceBetween from "@cloudscape-design/components/space-between";
+import Table from "@cloudscape-design/components/table";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { statsApi } from "@/lib/api/stats";
 import { ActivityFeed } from "@/features/dashboard/activity-feed";
+
+interface NotificationItem {
+  resource: string;
+  status: string;
+  lastUpdate: string;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -35,6 +42,7 @@ export default function DashboardPage() {
         </Header>
       </Box>
 
+      {/* 4 product cards */}
       <Box padding={{ horizontal: "l" }}>
         <ColumnLayout columns={4} variant="text-grid">
           <Container>
@@ -76,6 +84,7 @@ export default function DashboardPage() {
         </ColumnLayout>
       </Box>
 
+      {/* Register domain + Notifications */}
       <Box padding={{ horizontal: "l" }}>
         <ColumnLayout columns={2} variant="text-grid">
           <Container header={<Header variant="h2">Register domain</Header>}>
@@ -88,20 +97,11 @@ export default function DashboardPage() {
                 transfer your existing domains to Route 53.
               </Box>
               <Box>
-                <div style={{ display: "flex", gap: 8 }}>
+                <div className="flex gap-2">
                   <input
                     type="text"
                     placeholder="Enter a domain name"
-                    style={{
-                      flex: 1,
-                      height: 32,
-                      borderRadius: 8,
-                      border: "1px solid #8c8c94",
-                      padding: "5px 12px",
-                      fontSize: 14,
-                      fontFamily: '"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif',
-                      outline: "none",
-                    }}
+                    className="h-8 flex-1 rounded-lg border border-[#8c8c94] px-3 py-[5px] text-sm outline-none"
                   />
                   <Button>Check</Button>
                 </div>
@@ -121,32 +121,24 @@ export default function DashboardPage() {
               </Header>
             }
           >
-            <SpaceBetween size="m">
-              <input
-                type="text"
-                placeholder="Find notifications"
-                style={{
-                  width: "100%",
-                  height: 32,
-                  borderRadius: 8,
-                  border: "1px solid #8c8c94",
-                  padding: "5px 12px 5px 36px",
-                  fontSize: 14,
-                  fontFamily: '"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif',
-                  outline: "none",
-                }}
-              />
-              <Box textAlign="center" padding={{ vertical: "l" }}>
-                <Box variant="strong">No notifications</Box>
-                <Box variant="p" color="text-body-secondary">
-                  There are no notifications to display.
+            <Table<NotificationItem>
+              columnDefinitions={[
+                { id: "resource", header: "Resource", cell: (item) => item.resource },
+                { id: "status", header: "Status", cell: (item) => item.status },
+                { id: "lastUpdate", header: "Last update", cell: (item) => item.lastUpdate },
+              ]}
+              items={[]}
+              empty={
+                <Box textAlign="center" color="text-body-secondary">
+                  No notifications to display
                 </Box>
-              </Box>
-            </SpaceBetween>
+              }
+            />
           </Container>
         </ColumnLayout>
       </Box>
 
+      {/* Stats */}
       {stats && (
         <Box padding={{ horizontal: "l", bottom: "l" }}>
           <Container header={<Header variant="h2">Your Route 53 resources</Header>}>
@@ -172,9 +164,37 @@ export default function DashboardPage() {
         </Box>
       )}
 
+      {/* Activity feed */}
       <Box padding={{ horizontal: "l", bottom: "l" }}>
         <Container header={<Header variant="h2">Record creation activity (last 7 days)</Header>}>
           <ActivityFeed />
+        </Container>
+      </Box>
+
+      {/* More resources */}
+      <Box padding={{ horizontal: "l", bottom: "l" }}>
+        <Container header={<Header variant="h2">More resources</Header>}>
+          <SpaceBetween size="m">
+            <Link href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html" external>Documentation</Link>
+            <Link href="https://docs.aws.amazon.com/Route53/latest/APIReference/" external>API reference</Link>
+            <Link href="https://aws.amazon.com/route53/faqs/" external>FAQs</Link>
+            <Link href="https://repost.aws/tags/TAO7Z4bI5hQ5a2VgZJyYyZ5g/aws-route-53-dns-and-health-checks" external>Forum - DNS and health checks</Link>
+            <Link href="https://repost.aws/tags/TAO7Z4bI5hQ5a2VgZJyYyZ5g/aws-route-53-domain-name-registration" external>Forum - Domain name registration</Link>
+            <Link href="https://console.aws.amazon.com/support/home#/case/create?issueType=service-limit-increase" external>Request a limit increase</Link>
+          </SpaceBetween>
+        </Container>
+      </Box>
+
+      {/* Service health */}
+      <Box padding={{ horizontal: "l", bottom: "l" }}>
+        <Container header={<Header variant="h2">Service health</Header>}>
+          <Box variant="p">
+            To view the current status of Route 53, see the{" "}
+            <Link href="https://health.aws.amazon.com/health/current" external>
+              AWS Service Health Dashboard
+            </Link>
+            .
+          </Box>
         </Container>
       </Box>
     </SpaceBetween>
