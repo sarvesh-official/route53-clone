@@ -292,32 +292,32 @@ textarea::placeholder {
   border-color: #ec721f !important;
 }
 
-/* All Cloudscape primary variant buttons use AWS orange */
-.awsui_button.awsui_variant-primary:not(#\9),
-[class*="awsui_button"][class*="awsui_variant-primary"]:not(#\9) {
-  background-color: #FF9902 !important;
+/* All Cloudscape primary variant buttons use AWS orange.
+   Use body prefix for extra specificity to beat Cloudscape's :not(#\9) hack. */
+body [class*="awsui_button_"][class*="awsui_variant-primary"] {
+  background: #FF9902 !important;
   border-color: #FF9902 !important;
   color: #161D26 !important;
   font-weight: 600 !important;
 }
-.awsui_button.awsui_variant-primary:not(#\9):hover,
-[class*="awsui_button"][class*="awsui_variant-primary"]:not(#\9):hover {
-  background-color: #ec721f !important;
+body [class*="awsui_button_"][class*="awsui_variant-primary"]:hover {
+  background: #ec721f !important;
   border-color: #ec721f !important;
   color: #161D26 !important;
 }
-.awsui-dark-mode .awsui_button.awsui_variant-primary:not(#\9),
-.awsui-dark-mode [class*="awsui_button"][class*="awsui_variant-primary"]:not(#\9) {
+.awsui-dark-mode [class*="awsui_button_"][class*="awsui_variant-primary"] {
   color: #161D26 !important;
 }
 
 /* Force all Cloudscape links to use our app blue, not Cloudscape's default.
    Exclude sidebar links — those get hover/active styling below. */
-.awsui_link,
-[class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
+body [class*="awsui_link_"][class*="awsui_variant-primary"],
+body [class*="awsui_link_"][class*="awsui_variant-secondary"],
+body [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
   color: var(--r53-light-accent) !important;
 }
-.awsui-dark-mode .awsui_link,
+.awsui-dark-mode [class*="awsui_link_"][class*="awsui_variant-primary"],
+.awsui-dark-mode [class*="awsui_link_"][class*="awsui_variant-secondary"],
 .awsui-dark-mode [class*="awsui_link_"]:not([class*="awsui_link-active"]):not([class*="awsui_variant-info"]) {
   color: var(--r53-dark-accent) !important;
 }
