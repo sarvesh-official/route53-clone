@@ -35,8 +35,9 @@
 
 ## Tech Stack
 
-**Backend:** FastAPI · SQLAlchemy 2.x · Pydantic v2 · bcrypt · Alembic · SQLite  
-**Frontend:** Next.js 16 (App Router) · React 19 · TypeScript · Cloudscape Design System · Tailwind CSS v4 · TanStack Query
+**Backend:** FastAPI · SQLAlchemy 2.x · Pydantic v2 · bcrypt · Alembic · SQLite
+**Frontend:** Next.js 16 (App Router) · React 19 · TypeScript · Cloudscape Design System · Tailwind CSS v4 · TanStack Query · zod
+**Testing:** pytest (backend) · vitest (frontend) · GitHub Actions CI
 
 ---
 
@@ -378,6 +379,29 @@ frontend/
     lib/api/             Typed API client
     types/               Shared types
 ```
+
+---
+
+## Testing
+
+**Backend, 10 pytest files.** Auth happy/error paths, hosted-zones CRUD + pagination/search/filter, records CRUD + per-type validation, bulk operations, BIND import, JSON/BIND export, stats endpoints, and AWS mock endpoints.
+
+**Frontend, 44 vitest tests.** `ApiError` class behaviour (status, code, isUnauthorized, type guard), zod schemas for record and zone create/edit forms (TTL bounds, type validation, domain regex, comment length), token storage (save, read, clear, overwrite), and DNS format utilities.
+
+**CI.** GitHub Actions runs on every push and PR to `main`:
+- Backend: `ruff check`, `mypy`, `pytest`
+- Frontend: `tsc --noEmit`, `eslint`, `next build`, `vitest run`
+
+```bash
+cd backend  && python -m pytest tests/ -q
+cd frontend && npx vitest run
+```
+
+---
+
+## Decisions log
+
+Architectural decisions and trade-offs are recorded in [`DECISIONS.md`](DECISIONS.md).
 
 ---
 
