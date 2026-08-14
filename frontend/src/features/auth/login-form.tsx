@@ -73,6 +73,7 @@ export function LoginForm() {
     fontSize: "14px",
     borderColor: c.lightInputBorder,
     color: c.lightTextPrimary,
+    backgroundColor: c.sharedWhite,
   };
   const inputCls =
     "r53-input h-8 w-full rounded-lg border bg-white px-3 py-[5px] outline-none box-border transition-colors";

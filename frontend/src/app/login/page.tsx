@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { FeedbackModal } from "@/features/auth/feedback-modal";
 import { LoginForm } from "@/features/auth/login-form";
 import { useAuth } from "@/providers/auth-provider";
+import { useTheme } from "@/providers/theme-provider";
 
 /* CSS variable shortcuts for inline use.
    All values are defined in src/app/globals.css :root */
@@ -38,8 +39,14 @@ function randomMarketingImg() {
 export default function LoginPage() {
   const router = useRouter();
   const { status } = useAuth();
+  const { setTheme } = useTheme();
   const [marketingImg] = useState(randomMarketingImg);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  // Login page is always light mode
+  useEffect(() => {
+    setTheme("light");
+  }, [setTheme]);
 
   useEffect(() => {
     if (status === "authenticated") router.replace("/dashboard");
@@ -62,7 +69,7 @@ export default function LoginPage() {
 
   return (
     <div
-      className="flex min-h-screen flex-col font-sans md:[background-image:url(/assets/aws-bg-left.png),url(/assets/aws-bg-right.png)] md:[background-position:left_bottom,right_bottom] md:[background-repeat:no-repeat]"
+      className="flex min-h-screen flex-col font-sans md:[background-image:url(/assets/background-left.png),url(/assets/background-right.png)] md:[background-position:left_bottom,right_bottom] md:[background-repeat:no-repeat]"
       style={{ backgroundColor: c.lightBg, color: c.lightTextPrimary }}
     >
       {/* Desktop only — hidden on mobile, links move to bottom */}

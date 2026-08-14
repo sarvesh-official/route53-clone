@@ -228,13 +228,16 @@ textarea::placeholder {
 }
 
 /* Center align Header titles inside resource statistics columns */
-.awsui_column-layout [class*="awsui_item"] [class*="awsui_header"] {
+.awsui_column-layout [class*="awsui_item"] [class*="awsui_root_2qdw9"] {
   text-align: center !important;
   justify-content: center !important;
+  align-items: center !important;
 }
-.awsui_column-layout [class*="awsui_item"] [class*="awsui_header"] [class*="awsui_header-text"],
-.awsui_column-layout [class*="awsui_item"] [class*="awsui_header"] > * {
+.awsui_column-layout [class*="awsui_item"] [class*="awsui_root_2qdw9"] [class*="awsui_heading_"],
+.awsui_column-layout [class*="awsui_item"] [class*="awsui_root_2qdw9"] [class*="awsui_heading-text_"],
+.awsui_column-layout [class*="awsui_item"] [class*="awsui_root_2qdw9"] [class*="awsui_title_"] {
   text-align: center !important;
+  width: 100% !important;
 }
 
 /* Remove divider after Route 53 header in side navigation */

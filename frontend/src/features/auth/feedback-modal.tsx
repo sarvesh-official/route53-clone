@@ -12,6 +12,7 @@ const c = {
   lightAccent: "var(--r53-light-accent)",
   lightInputBorder: "var(--r53-light-input-border)",
   awsOrange: "var(--r53-aws-orange)",
+  sharedWhite: "var(--r53-shared-white)",
   sharedError: "var(--r53-shared-error)",
   sharedErrorBg: "var(--r53-shared-error-bg)",
 } as const;
@@ -61,6 +62,7 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
     fontSize: "13px",
     borderColor: c.lightInputBorder,
     color: c.lightTextPrimary,
+    backgroundColor: c.sharedWhite,
   };
   const inputCls =
     "h-8 w-full rounded-lg border bg-white px-3 py-[5px] outline-none box-border";
