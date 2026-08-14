@@ -4,7 +4,7 @@
 
 <h1 align="center">Route 53 Clone</h1>
 
-<p align="center">A high-fidelity clone of the AWS Route 53 console — built to feel like the real product, not a generic CRUD app.</p>
+<p align="center">A high-fidelity clone of the AWS Route 53 console, built to feel like the real product, not a generic CRUD app.</p>
 
 <p align="center">
   <strong>Live:</strong> <a href="https://route53.sarvee.in">route53.sarvee.in</a><br/>
@@ -16,12 +16,12 @@
 ## What's actually built
 
 - Mocked auth with bcrypt password hashing and 7-day session tokens (login, register, logout, session persistence across reloads)
-- Hosted zones full CRUD — create, list, search, edit, delete, bulk delete — with auto-created NS and SOA records
+- Hosted zones full CRUD, create, list, search, edit, delete, bulk delete, with auto-created NS and SOA records
 - DNS records full CRUD inside each zone, supporting A, AAAA, CNAME, TXT, MX, NS, PTR, SRV, and CAA with per-type value validation
 - BIND zone file import with a server-side parser that handles `$ORIGIN`, `@`, comments, and skips duplicates
 - JSON and BIND export for any hosted zone
 - Dashboard with live KPI tiles (total zones, public/private split, total records) and a 7-day activity sparkline
-- Cloudscape Design System throughout — same components AWS uses internally, so the tables, forms, modals, pagination, and notifications all look and behave identically
+- Cloudscape Design System throughout, same components AWS uses internally, so the tables, forms, modals, pagination, and notifications all look and behave identically
 - Dark mode with localStorage persistence, toggle in the settings dropdown
 - Keyboard shortcuts (`c` create record, `/` focus search, `r` refresh)
 - Bulk delete for both hosted zones and DNS records with confirmation modals
@@ -29,7 +29,7 @@
 - Coming soon pages for Health Checks, Traffic Policies, Resolver (6 sub-routes), Profiles, CIDR Collections, Domains, Global Resolvers, Policy Records, and Shared DNS Views
 - Mocked IAM, AWS Accounts, Organizations, and Billing endpoints
 
-**What's explicitly not built:** actual DNS resolution. Records don't propagate anywhere — this is a UX clone, not a DNS server.
+**What's explicitly not built:** actual DNS resolution. Records don't propagate anywhere, this is a UX clone, not a DNS server.
 
 ---
 
@@ -42,7 +42,7 @@
 
 ## Architecture
 
-The most important decision was using AWS's own Cloudscape Design System for the frontend instead of hand-rolling components. Cloudscape is the exact component library AWS uses across their console — so the tables, forms, modals, breadcrumbs, and top navigation are the real thing, not approximations. The tradeoff: Cloudscape is opinionated about layout and theming, so custom CSS is kept to a minimum (only Tailwind for the search bar and a few layout tweaks).
+The most important decision was using AWS's own Cloudscape Design System for the frontend instead of hand-rolling components. Cloudscape is the exact component library AWS uses across their console, so the tables, forms, modals, breadcrumbs, and top navigation are the real thing, not approximations. The tradeoff: Cloudscape is opinionated about layout and theming, so custom CSS is kept to a minimum (only Tailwind for the search bar and a few layout tweaks).
 
 ```mermaid
 flowchart LR
@@ -63,41 +63,46 @@ flowchart LR
     RP --> DB
 ```
 
-### Backend layering — strict one direction
+### Backend layering, strict one direction
 
-```text
-routers/  →  services/  →  repositories/  →  models/
-                ↕               ↕
-           validators/      SQLAlchemy session
-                ↕
-            schemas/ (Pydantic shapes shared across layers)
+```mermaid
+flowchart TD
+    RT["routers/\nthin HTTP layer"] --> SV["services/\nbusiness logic + commits"]
+    SV --> RP["repositories/\nsole DB-access layer"]
+    RP --> MD["models/\nSQLAlchemy ORM"]
+    SV --> VL["validators/\nper-record-type rules"]
+    SV --> SC["schemas/\nPydantic shapes"]
+    RP --> DB[("SQLite")]
 ```
 
-Only `repositories/` touches the SQLAlchemy session. Services own commits, business invariants, and per-type validation. Routers parse input, call the service, shape the response — nothing more. This kept each file small and testable.
+Only `repositories/` touches the SQLAlchemy session. Services own commits, business invariants, and per-type validation. Routers parse input, call the service, shape the response, nothing more. This kept each file small and testable.
 
 ### Frontend layering
 
-```text
-page.tsx  →  features/  →  lib/api/  →  apiFetch  →  HTTP  →  Backend
-                ↕
-         providers/ (Auth, Theme, Notifications, Query, Breadcrumb)
+```mermaid
+flowchart TD
+    PG["page.tsx\nthin route component"] --> FT["features/\nUI components"]
+    FT --> API["lib/api/\ntyped API client"]
+    API --> FETCH["apiFetch\nsingle fetch call site"]
+    FETCH -->|"HTTP + Bearer token"| BE["Backend"]
+    PG -.->|"context"| PV["providers/\nAuth, Theme, Notifications,\nQuery, Breadcrumb"]
 ```
 
-Each page is thin — it wires up TanStack Query hooks and delegates rendering to feature components. The API client is the single fetch call site that adds the auth bearer token and decodes the error envelope.
+Each page is thin, it wires up TanStack Query hooks and delegates rendering to feature components. The API client is the single fetch call site that adds the auth bearer token and decodes the error envelope.
 
 ### Why session tokens, not JWT
 
-JWT is stateless — validate the signature, trust the payload, done. But stateless JWTs can't be revoked: a stolen token stays valid until expiry. I used opaque session tokens stored in a `user_sessions` table so logout actually invalidates the token. The extra DB lookup on each request is the cost; actual logout is the benefit.
+JWT is stateless, validate the signature, trust the payload, done. But stateless JWTs can't be revoked: a stolen token stays valid until expiry. I used opaque session tokens stored in a `user_sessions` table so logout actually invalidates the token. The extra DB lookup on each request is the cost; actual logout is the benefit.
 
 ### Why SQLite
 
-The assignment asked for SQLite. It's a single-file database with no server process — perfect for a demo. SQLAlchemy's ORM layer means switching to Postgres later is a one-line config change (`DATABASE_URL`).
+The assignment asked for SQLite. It's a single-file database with no server process, perfect for a demo. SQLAlchemy's ORM layer means switching to Postgres later is a one-line config change (`DATABASE_URL`).
 
 ---
 
 ## Database Design
 
-SQLite with SQLAlchemy 2.x. Primary keys are Route 53-style IDs — zones get `Z` + 20 base32 chars, records get `R` + 20 base32 chars. This matches how real Route 53 IDs look (`Z1D623PEXAMPLE`).
+SQLite with SQLAlchemy 2.x. Primary keys are Route 53-style IDs, zones get `Z` + 20 base32 chars, records get `R` + 20 base32 chars. This matches how real Route 53 IDs look (`Z1D623PEXAMPLE`).
 
 **5 tables:** `users` · `user_sessions` · `hosted_zones` · `dns_records` · `feedbacks`
 
@@ -156,7 +161,7 @@ erDiagram
 <details>
 <summary>Click to expand all tables</summary>
 
-**`users`** — accounts
+**`users`**, accounts
 
 | Column | Type | Notes |
 |---|---|---|
@@ -166,7 +171,7 @@ erDiagram
 | `display_name` | TEXT | shown in UI |
 | `created_at`, `updated_at` | DATETIME | |
 
-**`user_sessions`** — one row per login
+**`user_sessions`**, one row per login
 
 | Column | Type | Notes |
 |---|---|---|
@@ -176,7 +181,7 @@ erDiagram
 | `expires_at` | DATETIME | issued + 7 days |
 | `created_at`, `updated_at` | DATETIME | |
 
-**`hosted_zones`** — DNS zones
+**`hosted_zones`**, DNS zones
 
 | Column | Type | Notes |
 |---|---|---|
@@ -188,9 +193,9 @@ erDiagram
 | `created_by` | FK → users CASCADE | owner |
 | `created_at`, `updated_at` | DATETIME | |
 | | CHECK | `type IN ('PUBLIC', 'PRIVATE')` |
-| | UNIQUE | `(created_by, name, type)` — no duplicate zones per user |
+| | UNIQUE | `(created_by, name, type)`, no duplicate zones per user |
 
-**`dns_records`** — records within a zone
+**`dns_records`**, records within a zone
 
 | Column | Type | Notes |
 |---|---|---|
@@ -203,7 +208,7 @@ erDiagram
 | `routing_policy` | TEXT | default `SIMPLE` |
 | `created_at`, `updated_at` | DATETIME | |
 
-**`feedbacks`** — recruiter/reviewer feedback (public, no auth)
+**`feedbacks`**, recruiter/reviewer feedback (public, no auth)
 
 | Column | Type | Notes |
 |---|---|---|
@@ -277,15 +282,18 @@ Full interactive docs at `/docs` (Swagger UI) when the backend is running.
 
 ---
 
-## Test Account
+## Test Accounts
 
-Pre-seeded with 2 hosted zones (`example.com.`, `staging.example.com.`) and 12 DNS records (A, AAAA, CNAME, MX, TXT, NS, SOA).
+Pre-seeded with 4 hosted zones (`example.com.`, `staging.example.com.`, `alice.io.`, `bob.dev.`) and 24 DNS records (A, AAAA, CNAME, MX, TXT, NS, SOA) across all users.
 
-| Email | Password |
-|---|---|
-| demo@example.com | demo1234 |
+| Email | Password | Zones |
+|---|---|---|
+| demo@example.com | demo1234 | example.com., staging.example.com. |
+| alice@example.com | alice12345 | alice.io. |
+| bob@example.com | bob12345 | bob.dev. |
+| carol@example.com | carol12345 | (empty, for testing fresh signup flow) |
 
-You can also register a new account from the signup page — it creates a real session and works immediately.
+You can also register a new account from the signup page, it creates a real session and works immediately.
 
 ---
 
@@ -318,7 +326,7 @@ npm run dev    # http://localhost:3000
 
 ### Environment
 
-Backend reads from `backend/.env` (see `backend/.env.example`). All have defaults — locally you typically change nothing.
+Backend reads from `backend/.env` (see `backend/.env.example`). All have defaults, locally you typically change nothing.
 
 Frontend reads `NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:8000`). See `frontend/.env.example`.
 
@@ -377,17 +385,17 @@ frontend/
 
 These tell you more about the codebase than a feature list does.
 
-**Top nav didn't match AWS layout.** The initial top nav used a generic header with a logo and links. Rebuilt it with Cloudscape's `TopNavigation` component and the actual AWS console structure — services dropdown, search bar, region selector, account menu with dark mode toggle. Had to work around Cloudscape's fixed icon set and the fact that `TopNavigation` expects an `i18nStrings` prop that isn't well documented.
+**Top nav didn't match AWS layout.** The initial top nav used a generic header with a logo and links. Rebuilt it with Cloudscape's `TopNavigation` component and the actual AWS console structure, services dropdown, search bar, region selector, account menu with dark mode toggle. Had to work around Cloudscape's fixed icon set and the fact that `TopNavigation` expects an `i18nStrings` prop that isn't well documented.
 
-**Login page was a single form.** AWS uses a two-step sign-in flow — email first, then password. Rebuilt the login form to match: step 1 asks for email, step 2 shows the password field with the email above it. The "Create account" link goes to the signup page, which mirrors AWS's actual signup flow.
+**Login page was a single form.** AWS uses a two-step sign-in flow, email first, then password. Rebuilt the login form to match: step 1 asks for email, step 2 shows the password field with the email above it. The "Create account" link goes to the signup page, which mirrors AWS's actual signup flow.
 
-**Theme toggle flashed the wrong colors on hard refresh.** `ThemeProvider` set `.dark` on `<html>` inside `useEffect` — after the first paint. Fixed with a synchronous inline `<script>` in `<head>` that reads `localStorage` before React renders. Same technique `next-themes` uses.
+**Theme toggle flashed the wrong colors on hard refresh.** `ThemeProvider` set `.dark` on `<html>` inside `useEffect`, after the first paint. Fixed with a synchronous inline `<script>` in `<head>` that reads `localStorage` before React renders. Same technique `next-themes` uses.
 
 **Theme didn't sync across tabs.** Switching theme in one tab didn't update others. Replaced `useState` with `useSyncExternalStore` listening to `storage` events. Now all open tabs update instantly.
 
 **Edit button on hosted zones table was disabled.** The list page had View and Edit buttons greyed out because the edit page didn't exist. Built the edit page at `/hosted-zones/[zoneId]/edit` and wired the button to navigate there with the selected zone ID.
 
-**Vercel build failed — `@tailwindcss/postcss` not found.** Tailwind v4 was in `devDependencies` but Vercel doesn't install devDependencies in production. Moved `tailwindcss` and `@tailwindcss/postcss` to `dependencies` and added a `tw:gen` script that runs before `next build` to generate the Tailwind CSS file.
+**Vercel build failed, `@tailwindcss/postcss` not found.** Tailwind v4 was in `devDependencies` but Vercel doesn't install devDependencies in production. Moved `tailwindcss` and `@tailwindcss/postcss` to `dependencies` and added a `tw:gen` script that runs before `next build` to generate the Tailwind CSS file.
 
 **Render deployed Python 3.14 instead of 3.11.** Free tier defaults to the latest Python. `pydantic-core` wheels weren't available for 3.14 yet. Fixed by adding `.python-version` with `3.11.9` (which Render reads) and unpinning `pydantic` to allow compatible wheels.
 
@@ -397,12 +405,19 @@ These tell you more about the codebase than a feature list does.
 
 ## Assumptions
 
-- **No actual DNS resolution.** Records are stored and displayed but don't propagate anywhere. This is a UX clone, not a DNS server. Plugging in a real resolver would require a DNS backend like PowerDNS or CoreDNS.
-- **SQLite over Postgres.** Zero infrastructure for local dev. The SQLAlchemy layer is DB-agnostic — switching is a one-line connection string change. The tradeoff is no concurrent writes at scale.
-- **Mocked auth, not AWS IAM.** Sessions are opaque tokens in a `user_sessions` table, not JWTs. Logout deletes the row. The extra DB lookup per request is worth it for a demo where reviewers log in and out.
-- **Mocked IAM, Accounts, Organizations, Billing.** These endpoints return static placeholder data. The real AWS APIs require SigV4 signing and an AWS account — out of scope for a 24-hour assignment.
-- **Cloudscape over custom components.** Using AWS's own design system meant the UI looks right without pixel-pushing CSS. The tradeoff is working within Cloudscape's constraints — fixed icon set, layout patterns, and theming tokens that don't always map cleanly to Tailwind.
-- **BIND import is parser-only.** The import handles `$ORIGIN`, `@`, comments, and common record types. It skips duplicates rather than merging. A full BIND parser would handle `$INCLUDE`, `$TTL`, and quoted strings — overkill for this demo.
+**No actual DNS resolution.** Records are stored and displayed but don't propagate anywhere. This is a UX clone, not a DNS server. Plugging in a real resolver would require a DNS backend like PowerDNS or CoreDNS, which is out of scope for a 24-hour assignment.
+
+**SQLite over Postgres.** Zero infrastructure for local dev. The SQLAlchemy ORM layer is DB-agnostic, switching is a one-line connection string change. The real cost is no concurrent writes at scale, but for a single-user demo it's fine.
+
+**Mocked auth, not AWS IAM.** Sessions are opaque tokens in a `user_sessions` table, not JWTs. Logout deletes the row and the token is immediately invalid. The extra DB lookup per request is worth it for a demo where reviewers log in and out repeatedly.
+
+**Mocked IAM, Accounts, Organizations, Billing.** These endpoints return static placeholder data. The real AWS APIs require SigV4 signing and an AWS account, which is out of scope. The frontend pages render the mocked responses so the console feels complete.
+
+**Cloudscape over custom components.** Using AWS's own design system meant the UI looks right without pixel-pushing CSS. The tradeoff is working within Cloudscape's constraints, fixed icon set, layout patterns, and theming tokens that don't always map cleanly to Tailwind.
+
+**BIND import is parser-only.** The import handles `$ORIGIN`, `@`, comments, and common record types. It skips duplicates rather than merging. A full BIND parser would handle `$INCLUDE`, `$TTL`, and quoted strings, but that's overkill for this demo.
+
+**Ephemeral filesystem on Render free tier.** The SQLite database is wiped on every deploy. The Procfile runs `alembic upgrade head && python -m app.seed` on each startup so demo data is always available. Data created during a session persists until the instance spins down. A persistent disk or managed Postgres would fix this, but both cost money.
 
 ---
 

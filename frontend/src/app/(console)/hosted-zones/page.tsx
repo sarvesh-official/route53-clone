@@ -111,8 +111,8 @@ export default function HostedZonesPage() {
 
         <Container>
           <SpaceBetween size="l">
-            <div className="flex items-center justify-between">
-              <div className="relative w-[648px]">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="relative w-full sm:w-[648px]">
                 <span className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center text-[#687078]">
                   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
                     <path

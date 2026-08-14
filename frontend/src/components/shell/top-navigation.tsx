@@ -101,7 +101,7 @@ export function AppTopNavigation() {
             placeholder="Search"
             className="h-[30px] w-full rounded-lg border-2 border-[#656871] bg-[#0f141a] px-[83px] py-px text-sm text-[#ebebf0] outline-none"
           />
-          <span className="pointer-events-none absolute right-[42px] top-1/2 -translate-y-1/2 text-sm text-[#a4a4ad]">
+          <span className="pointer-events-none absolute right-[42px] top-1/2 hidden -translate-y-1/2 text-sm text-[#a4a4ad] md:block">
             [Option+S]
           </span>
           <button
@@ -126,7 +126,7 @@ export function AppTopNavigation() {
       <div className="flex shrink-0 items-center">
         <a
           href="#"
-          className="flex h-12 cursor-pointer appearance-none items-center justify-center bg-transparent px-4 text-xs font-medium text-[#dedee3]"
+          className="hidden h-12 cursor-pointer appearance-none items-center justify-center bg-transparent px-4 text-xs font-medium text-[#dedee3] md:flex"
           title="CloudShell"
           onClick={(e) => e.preventDefault()}
         >
@@ -144,7 +144,7 @@ export function AppTopNavigation() {
         </a>
 
         <button
-          className="flex h-12 cursor-pointer appearance-none items-center justify-center bg-transparent px-4 text-xs font-medium text-[#dedee3]"
+          className="hidden h-12 cursor-pointer appearance-none items-center justify-center bg-transparent px-4 text-xs font-medium text-[#dedee3] md:flex"
           title="Notifications"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -160,7 +160,7 @@ export function AppTopNavigation() {
         </button>
 
         <button
-          className="flex h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3]"
+          className="hidden h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3] lg:flex"
           title="Help &amp; support"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -177,7 +177,7 @@ export function AppTopNavigation() {
         </button>
 
         <button
-          className="flex h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3]"
+          className="hidden h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3] lg:flex"
           title="Settings"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -192,7 +192,7 @@ export function AppTopNavigation() {
         </button>
 
         <button
-          className="flex h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3]"
+          className="hidden h-12 cursor-pointer appearance-none items-center gap-1 bg-transparent px-4 text-xs font-medium text-[#dedee3] lg:flex"
           title="Global"
         >
           Global

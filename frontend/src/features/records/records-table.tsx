@@ -239,9 +239,9 @@ export function RecordsTable({ zone }: { zone: HostedZone }) {
   return (
     <>
       <SpaceBetween size="l">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="relative w-[400px]">
+            <div className="relative w-full sm:w-[400px]">
               <span className="pointer-events-none absolute left-3 top-1/2 z-[1] -translate-y-1/2 text-sm text-[#687078]">
                 <svg
                   width="14"

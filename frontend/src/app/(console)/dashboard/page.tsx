@@ -44,7 +44,7 @@ export default function DashboardPage() {
 
       {/* 4 product cards */}
       <Box padding={{ horizontal: "l" }}>
-        <ColumnLayout columns={4} variant="text-grid">
+        <ColumnLayout columns={4} minColumnWidth={200} variant="text-grid">
           <Container>
             <Header variant="h3">DNS management</Header>
             <Box variant="p">
@@ -86,7 +86,7 @@ export default function DashboardPage() {
 
       {/* Register domain + Notifications */}
       <Box padding={{ horizontal: "l" }}>
-        <ColumnLayout columns={2} variant="text-grid">
+        <ColumnLayout columns={2} minColumnWidth={300} variant="text-grid">
           <Container header={<Header variant="h2">Register domain</Header>}>
             <SpaceBetween size="m">
               <Box variant="p">
@@ -142,7 +142,7 @@ export default function DashboardPage() {
       {stats && (
         <Box padding={{ horizontal: "l", bottom: "l" }}>
           <Container header={<Header variant="h2">Your Route 53 resources</Header>}>
-            <ColumnLayout columns={4} variant="text-grid">
+            <ColumnLayout columns={4} minColumnWidth={120} variant="text-grid">
               <Box>
                 <Box variant="h3">{stats.total_zones}</Box>
                 <Box variant="small" color="text-body-secondary">Hosted zones</Box>

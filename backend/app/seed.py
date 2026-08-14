@@ -132,29 +132,51 @@ def seed(db: Session | None = None) -> None:
             print(f"Demo user already exists ({existing.email}). Skipping seed.")
             return
 
-        # Create demo user
-        user = User(
-            id=uuid4_str(),
-            email=settings.demo_email,
-            password_hash=_hash_password(settings.demo_password),
-            display_name=settings.demo_name,
-        )
-        db.add(user)
-        db.flush()
+        # Demo users, each with their own hosted zones
+        users = [
+            ("demo@example.com", "demo1234", "Demo User"),
+            ("alice@example.com", "alice12345", "Alice"),
+            ("bob@example.com", "bob12345", "Bob"),
+            ("carol@example.com", "carol12345", "Carol"),
+        ]
 
-        # Create two demo zones with records
-        zone1 = _make_zone(db, user.id, "example.com.", "PUBLIC", "Main production zone")
+        created_users = []
+        for email, password, name in users:
+            u = User(
+                id=uuid4_str(),
+                email=email,
+                password_hash=_hash_password(password),
+                display_name=name,
+            )
+            db.add(u)
+            db.flush()
+            created_users.append((u, email, password, name))
+
+        # Demo user gets two zones with full record sets
+        demo_user = created_users[0][0]
+        zone1 = _make_zone(db, demo_user.id, "example.com.", "PUBLIC", "Main production zone")
         _make_extra_records(db, zone1.id, "example.com.")
 
-        zone2 = _make_zone(db, user.id, "staging.example.com.", "PUBLIC", "Staging environment")
+        zone2 = _make_zone(db, demo_user.id, "staging.example.com.", "PUBLIC", "Staging environment")
         _make_extra_records(db, zone2.id, "staging.example.com.")
 
-        # Update record counts
         zone1.record_count = 2 + 4  # NS + SOA + 4 extra
         zone2.record_count = 2 + 4
 
+        # Alice gets a zone
+        alice = created_users[1][0]
+        zone3 = _make_zone(db, alice.id, "alice.io.", "PUBLIC", "Personal blog")
+        _make_extra_records(db, zone3.id, "alice.io.")
+        zone3.record_count = 2 + 4
+
+        # Bob gets a zone
+        bob = created_users[2][0]
+        zone4 = _make_zone(db, bob.id, "bob.dev.", "PUBLIC", "Portfolio")
+        _make_extra_records(db, zone4.id, "bob.dev.")
+        zone4.record_count = 2 + 4
+
         db.commit()
-        print(f"Seed complete. Created user '{user.email}' with 2 zones and 12 records.")
+        print(f"Seed complete. Created {len(created_users)} users with 4 zones and 24 records.")
     except Exception:
         db.rollback()
         raise
