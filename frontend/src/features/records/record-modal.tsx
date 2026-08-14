@@ -8,7 +8,7 @@ import Modal from "@cloudscape-design/components/modal";
 import Select from "@cloudscape-design/components/select";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Textarea from "@cloudscape-design/components/textarea";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import type {
   CreatableRecordType,
@@ -37,28 +37,51 @@ export function RecordModal({
   record,
   zoneName,
 }: RecordModalProps) {
-  const [name, setName] = useState("");
-  const [type, setType] = useState<CreatableRecordType>("A");
-  const [ttl, setTtl] = useState("300");
-  const [value, setValue] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  // Key forces remount when modal opens, so inner form state initializes
+  // lazily from props without needing setState-in-effect.
+  const remountKey = `${mode}-${visible}-${record?.id ?? "new"}`;
 
-  useEffect(() => {
-    if (visible) {
-      if (mode === "edit" && record) {
-        setName(record.name);
-        setType(record.type as CreatableRecordType);
-        setTtl(String(record.ttl));
-        setValue(record.value);
-      } else {
-        setName("");
-        setType("A");
-        setTtl("300");
-        setValue("");
-      }
-      setError(null);
-    }
-  }, [visible, mode, record]);
+  if (!visible) return null;
+
+  return (
+    <RecordModalInner
+      key={remountKey}
+      visible={visible}
+      onDismiss={onDismiss}
+      onSubmit={onSubmit}
+      submitting={submitting}
+      mode={mode}
+      record={record}
+      zoneName={zoneName}
+    />
+  );
+}
+
+type RecordModalInnerProps = RecordModalProps;
+
+function RecordModalInner({
+  visible,
+  onDismiss,
+  onSubmit,
+  submitting,
+  mode,
+  record,
+  zoneName,
+}: RecordModalInnerProps) {
+  const isEdit = mode === "edit";
+  const [name, setName] = useState(() =>
+    isEdit && record ? record.name : "",
+  );
+  const [type, setType] = useState<CreatableRecordType>(() =>
+    isEdit && record ? (record.type as CreatableRecordType) : "A",
+  );
+  const [ttl, setTtl] = useState(() =>
+    isEdit && record ? String(record.ttl) : "300",
+  );
+  const [value, setValue] = useState(() =>
+    isEdit && record ? record.value : "",
+  );
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = () => {
     setError(null);
@@ -75,7 +98,7 @@ export function RecordModal({
       setError("TTL must be a number between 0 and 2147483647.");
       return;
     }
-    if (mode === "edit") {
+    if (isEdit) {
       onSubmit({ ttl: ttlNum, value: value.trim() });
     } else {
       onSubmit({
@@ -87,8 +110,6 @@ export function RecordModal({
       });
     }
   };
-
-  const isEdit = mode === "edit";
 
   return (
     <Modal

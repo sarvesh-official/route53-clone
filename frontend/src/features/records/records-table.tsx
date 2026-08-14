@@ -239,36 +239,10 @@ export function RecordsTable({ zone }: { zone: HostedZone }) {
   return (
     <>
       <SpaceBetween size="l">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 16,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <div style={{ position: "relative", width: 400 }}>
-              <span
-                style={{
-                  position: "absolute",
-                  left: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "#687078",
-                  fontSize: 14,
-                  pointerEvents: "none",
-                  zIndex: 1,
-                }}
-              >
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative w-[400px]">
+              <span className="pointer-events-none absolute left-3 top-1/2 z-[1] -translate-y-1/2 text-sm text-[#687078]">
                 <svg
                   width="14"
                   height="14"
@@ -303,7 +277,7 @@ export function RecordsTable({ zone }: { zone: HostedZone }) {
               options={TYPE_OPTIONS}
             />
           </div>
-          <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               iconName="refresh"
               variant="icon"
@@ -388,13 +362,7 @@ export function RecordsTable({ zone }: { zone: HostedZone }) {
           wrapLines
         />
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <div className="flex items-center justify-between">
           <Box variant="small" color="text-body-secondary">
             {total} record{total !== 1 ? "s" : ""} • Press{" "}
             <kbd>c</kbd> to create, <kbd>/</kbd> to search, <kbd>r</kbd> to
