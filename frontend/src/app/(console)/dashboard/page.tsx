@@ -62,7 +62,7 @@ export default function DashboardPage() {
           <ColumnLayout columns={4} minColumnWidth={200} variant="text-grid">
             {/* DNS management */}
             <Box textAlign="center">
-              <Header variant="h3">DNS management</Header>
+              <h3 className="r53-card-title">DNS management</h3>
               <Box variant="p" padding={{ bottom: "s" }}>
                 A hosted zone tells Route 53 how to respond to DNS queries for a domain such as example.com.
               </Box>
@@ -75,7 +75,7 @@ export default function DashboardPage() {
             </Box>
             {/* Availability monitoring */}
             <Box textAlign="center">
-              <Header variant="h3">Availability monitoring</Header>
+              <h3 className="r53-card-title">Availability monitoring</h3>
               <Box variant="p" padding={{ bottom: "s" }}>
                 Health checks monitor your applications and web resources, and direct DNS queries to healthy resources.
               </Box>
@@ -88,7 +88,7 @@ export default function DashboardPage() {
             </Box>
             {/* Traffic management */}
             <Box textAlign="center">
-              <Header variant="h3">Traffic management</Header>
+              <h3 className="r53-card-title">Traffic management</h3>
               <Box variant="p" padding={{ bottom: "s" }}>
                 A visual tool that lets you easily create policies for multiple endpoints in complex configurations.
               </Box>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
             </Box>
             {/* Domain registration */}
             <Box textAlign="center">
-              <Header variant="h3">Domain registration</Header>
+              <h3 className="r53-card-title">Domain registration</h3>
               <Box variant="p" padding={{ bottom: "s" }}>
                 A domain is the name, such as example.com, that your users use to access your application.
               </Box>

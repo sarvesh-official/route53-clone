@@ -297,3 +297,17 @@ numbers. Seeded records have backdated timestamps so the chart looks
 populated on first run.
 **Tradeoff**: A fresh database with no records shows an empty chart. The seed
 script handles this by distributing timestamps across the past 7 days.
+
+### 29. Plain `<h3>` for dashboard card titles instead of Cloudscape Header
+
+**Decision**: The four resource cards on the dashboard (DNS management,
+Availability monitoring, Traffic management, Domain registration) use a plain
+`<h3 className="r53-card-title">` instead of Cloudscape's `<Header variant="h3">`.
+**Rationale**: Cloudscape's `Header` component does not support `textAlign`,
+and its internal class names are not stable across versions. The previous CSS
+selectors targeting `awsui_root_2qdw9` and `awsui_heading_` broke when
+Cloudscape updated. A plain `<h3>` with a custom `.r53-card-title` class
+centers reliably and is version-independent.
+**Tradeoff**: Slight visual divergence from Cloudscape's heading styling, but
+the custom class matches the font size and weight closely enough that the
+difference is imperceptible.
