@@ -115,25 +115,25 @@ export default function SignupPage() {
 
       {/* Main content — two columns on desktop, single on mobile */}
       <div className="flex flex-1 items-center justify-center px-5 pt-8 md:px-0 md:pt-12">
-        <div className="flex w-full max-w-4xl flex-col items-start gap-8 md:flex-row md:justify-center md:gap-12 lg:gap-16">
+        <div className="flex w-full max-w-3xl flex-col items-start gap-8 md:flex-row md:justify-center md:gap-8 lg:gap-10">
           {/* Info panel — hidden on small screens */}
-          <div className="hidden md:block md:w-96 lg:w-[30rem]">
+          <div className="hidden md:block md:w-72 lg:w-80">
             <h2
-              className="mb-3 text-2xl font-semibold leading-7"
+              className="mb-3 text-xl font-semibold leading-6"
               style={{ color: c.lightTextPrimary }}
             >
-              Try AWS at no cost for up to 6 months
+              Manage your DNS with Route 53 Clone
             </h2>
             <p className="text-sm leading-5 text-[#424650]">
-              Start with USD $100 in AWS credits, plus earn up to USD $100 by
-              completing various activities.
+              Create hosted zones, DNS records, traffic policies,<br />
+              and health checks. Built with Next.js and Cloudscape.
             </p>
             <img
               src="/assets/free-tier-rocket.png"
-              alt="Free Tier Rocket Icon"
-              width={300}
-              height={200}
-              className="mt-6 h-auto w-[300px]"
+              alt="Route 53 Clone"
+              width={220}
+              height={146}
+              className="mt-5 mx-auto h-auto w-[220px]"
             />
           </div>
 
@@ -148,7 +148,7 @@ export default function SignupPage() {
           />
 
           {/* Form column */}
-          <div className="w-full max-w-[320px] sm:max-w-[340px] md:w-[30rem] md:mt-[-16px]">
+          <div className="w-full max-w-[320px] sm:max-w-[340px] md:w-72 lg:w-80 md:mt-[-16px]">
             <form onSubmit={onSubmit}>
               <div className="flex flex-col gap-5">
                 {/* Heading */}
@@ -156,7 +156,7 @@ export default function SignupPage() {
                   className="text-2xl font-semibold leading-7"
                   style={{ color: c.lightTextPrimary }}
                 >
-                  Sign up for AWS
+                  Create your account
                 </h1>
 
                 {error && (
@@ -186,7 +186,7 @@ export default function SignupPage() {
                     className="mb-1.5 text-xs"
                     style={{ color: c.lightTextMuted }}
                   >
-                    Used for account recovery and as described in the{" "}
+                    Used to sign in to your Route 53 Clone account. See the{" "}
                     <a
                       href="https://github.com/sarvesh-official/route53-clone#readme"
                       target="_blank"
@@ -194,7 +194,7 @@ export default function SignupPage() {
                       className="inline-flex items-center gap-0.5 font-normal no-underline"
                       style={{ fontSize: "12px", color: c.darkAccentHover }}
                     >
-                      AWS Privacy Notice
+                      project README
                       {externalIcon}
                     </a>
                   </p>
@@ -219,14 +219,14 @@ export default function SignupPage() {
                     className={labelCls}
                     style={{ fontSize: "14px", ...labelStyle }}
                   >
-                    AWS account name
+                    Account name
                   </label>
                   <p
                     className="mb-1.5 text-xs"
                     style={{ color: c.lightTextMuted }}
                   >
-                    Choose a name for your account. You can change this name in
-                    your account settings after you sign up.
+                    A display name for your account. This is shown in the
+                    console navigation bar after sign in.
                   </p>
                   <input
                     id="accountName"
@@ -245,10 +245,12 @@ export default function SignupPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="h-9 w-full cursor-pointer appearance-none rounded-md border-none font-medium text-white transition-colors hover:bg-[#0a3a8f]"
+                  className="h-8 w-full cursor-pointer appearance-none rounded-full border-2 font-medium"
                   style={{
                     fontSize: "14px",
-                    backgroundColor: c.lightAccent,
+                    borderColor: c.awsOrange,
+                    backgroundColor: c.awsOrange,
+                    color: c.lightTextPrimary,
                     opacity: submitting ? 0.6 : 1,
                     cursor: submitting ? "not-allowed" : "pointer",
                   }}
@@ -274,11 +276,11 @@ export default function SignupPage() {
             <button
               type="button"
               onClick={() => router.push("/login")}
-              className="h-9 w-full cursor-pointer appearance-none rounded-md border bg-white font-medium transition-colors hover:bg-[#f0f4ff]"
+              className="h-8 w-full cursor-pointer appearance-none rounded-full border-2 bg-white px-4 font-medium"
               style={{
                 fontSize: "14px",
-                borderColor: c.lightInputBorder,
-                color: c.lightTextPrimary,
+                color: c.lightAccent,
+                borderColor: c.lightAccent,
               }}
             >
               Sign in to an existing AWS account
@@ -289,7 +291,8 @@ export default function SignupPage() {
               className="mt-6 text-xs leading-5"
               style={{ color: c.lightTextMuted }}
             >
-              This site uses essential cookies. See our{" "}
+              This is a demo application. No real AWS credentials are used.
+              Authentication is mocked. See the{" "}
               <a
                 href="https://github.com/sarvesh-official/route53-clone#readme"
                 target="_blank"
@@ -297,10 +300,10 @@ export default function SignupPage() {
                 className="inline-flex items-center gap-0.5 font-normal no-underline"
                 style={{ fontSize: "12px", color: c.darkAccentHover }}
               >
-                Cookie Notice
+                project README
                 {externalIcon}
               </a>{" "}
-              for more information.
+              for details.
             </p>
           </div>
         </div>
@@ -323,13 +326,13 @@ export default function SignupPage() {
         <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
           <div className="flex items-center gap-3 text-sm">
             <a
-              href="https://github.com/sarvesh-official/route53-clone#readme"
+              href="https://github.com/sarvesh-official/route53-clone"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-0.5 font-normal no-underline"
               style={{ fontSize: "14px", color: c.darkAccentHover }}
             >
-              Privacy Policy
+              Source Code
               {externalIcon}
             </a>
             <span className="text-[#d5dbdb]">|</span>
@@ -340,7 +343,7 @@ export default function SignupPage() {
               className="inline-flex items-center gap-0.5 font-normal no-underline"
               style={{ fontSize: "14px", color: c.darkAccentHover }}
             >
-              Terms of Use
+              README
               {externalIcon}
             </a>
           </div>
