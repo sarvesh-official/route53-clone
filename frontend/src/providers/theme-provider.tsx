@@ -6,7 +6,7 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
@@ -16,46 +16,49 @@ const STORAGE_KEY = "r53.theme";
 interface ThemeContextValue {
   theme: Theme;
   toggle: () => void;
-  setTheme: (t: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function readStored(): Theme {
-  if (typeof window === "undefined") return "light";
+function subscribe(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function getSnapshot(): Theme {
   const v = window.localStorage.getItem(STORAGE_KEY);
   return v === "dark" ? "dark" : "light";
 }
 
+function getServerSnapshot(): Theme {
+  return "light";
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const theme = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   useEffect(() => {
-    const stored = readStored();
-    applyMode(stored === "dark" ? Mode.Dark : Mode.Light);
-    setTheme(stored);
-  }, []);
+    applyMode(theme === "dark" ? Mode.Dark : Mode.Light);
+  }, [theme]);
 
-  const applyTheme = useCallback((next: Theme) => {
+  const toggle = useCallback(() => {
+    const next: Theme = theme === "dark" ? "light" : "dark";
     applyMode(next === "dark" ? Mode.Dark : Mode.Light);
     try {
       window.localStorage.setItem(STORAGE_KEY, next);
+      // Manually dispatch a storage event so useSyncExternalStore updates
+      window.dispatchEvent(new StorageEvent("storage", { key: STORAGE_KEY }));
     } catch {
       // ignore quota errors
     }
-    setTheme(next);
-  }, []);
-
-  const toggle = useCallback(() => {
-    setTheme((prev) => {
-      const next: Theme = prev === "dark" ? "light" : "dark";
-      applyTheme(next);
-      return next;
-    });
-  }, [applyTheme]);
+  }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggle, setTheme: applyTheme }}>
+    <ThemeContext.Provider value={{ theme, toggle }}>
       {children}
     </ThemeContext.Provider>
   );
