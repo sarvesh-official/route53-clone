@@ -31,24 +31,24 @@ class ZoneImportService:
         imported: list[DnsRecord] = []
 
         for entry in parsed:
-            rtype = entry["type"]
+            rtype = str(entry["type"])
             if rtype == "SOA":
                 continue
 
             try:
                 canonical_name = normalize_record_name(
-                    entry["name"], zone_name=zone.name
+                    str(entry["name"]), zone_name=zone.name
                 )
                 canonical_value = validate_value(
-                    rtype, entry["value"], name=canonical_name, zone_name=zone.name
+                    rtype, str(entry["value"]), name=canonical_name, zone_name=zone.name
                 )
-                validate_ttl(entry["ttl"])
+                validate_ttl(int(entry["ttl"]))
             except ValidationFailedException:
                 # Skip invalid records rather than failing the whole import.
                 continue
 
             existing = self._records.get_by_zone_name_type(
-                zone_id=zone.id, name=canonical_name, record_type=rtype
+                zone_id=zone.id, name=canonical_name, record_type=str(rtype)
             )
             if existing is not None:
                 continue

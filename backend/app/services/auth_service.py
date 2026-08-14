@@ -32,7 +32,7 @@ class AuthService:
                 detail="Incorrect email or password",
             )
 
-        token, session = self._create_session(user)
+        token, _session = self._create_session(user)
         self.db.commit()
         self.db.refresh(user)
 
@@ -63,7 +63,7 @@ class AuthService:
         self.db.add(user)
         self.db.flush()
 
-        token, session = self._create_session(user)
+        token, _session = self._create_session(user)
         self.db.commit()
         self.db.refresh(user)
 

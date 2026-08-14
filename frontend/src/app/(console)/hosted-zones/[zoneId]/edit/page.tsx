@@ -33,7 +33,10 @@ export default function EditHostedZonePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (zone) setComment(zone.comment);
+    if (zone) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setComment(zone.comment);
+    }
   }, [zone]);
 
   const updateMutation = useMutation({

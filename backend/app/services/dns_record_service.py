@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import ConflictException, NotFoundException
-from app.core.ids import generate_record_id
 from app.models.dns_record import DnsRecord
 from app.models.hosted_zone import HostedZone
 from app.repositories.dns_record_repository import DnsRecordRepository

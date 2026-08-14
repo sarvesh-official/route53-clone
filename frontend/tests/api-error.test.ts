@@ -41,6 +41,7 @@ describe("ApiError", () => {
   it("defaults details to empty array when missing", () => {
     const err = new ApiError(400, {
       error: { code: "bad_request", message: "Bad input" },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
     expect(err.details).toEqual([]);
   });

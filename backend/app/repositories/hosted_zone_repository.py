@@ -48,7 +48,7 @@ class HostedZoneRepository(BaseRepository[HostedZone]):
         items = self.db.scalars(stmt).all()
         return items, int(total)
 
-    def get_by_id(self, id: str, user_id: str) -> HostedZone | None:
+    def get_by_id(self, id: str, user_id: str) -> HostedZone | None:  # type: ignore[override]
         return self.db.execute(
             select(HostedZone).where(
                 HostedZone.id == id, HostedZone.created_by == user_id

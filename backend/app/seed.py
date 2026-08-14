@@ -18,8 +18,7 @@ from app.core.config import settings
 from app.core.database import SessionLocal, engine
 from app.core.ids import generate_record_id, generate_zone_id
 from app.models import DnsRecord, HostedZone, User
-from app.models.base import Base, uuid4_str
-from app.models.base import utcnow
+from app.models.base import Base, utcnow, uuid4_str
 
 # ---------------------------------------------------------------------------
 # Helpers

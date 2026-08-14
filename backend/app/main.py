@@ -20,8 +20,8 @@ from app.routers.dns_records import zone_router as dns_zone_router
 from app.routers.feedback import router as feedback_router
 from app.routers.hosted_zones import router as hosted_zones_router
 from app.routers.stats import router as stats_router
-from app.routers.zone_import import router as zone_import_router
 from app.routers.zone_export import router as zone_export_router
+from app.routers.zone_import import router as zone_import_router
 
 
 def create_app() -> FastAPI:

@@ -2,8 +2,6 @@
 
 from sqlalchemy.orm import Session
 
-from app.models.dns_record import DnsRecord
-from app.models.hosted_zone import HostedZone
 from app.repositories.dns_record_repository import DnsRecordRepository
 from app.repositories.hosted_zone_repository import HostedZoneRepository
 

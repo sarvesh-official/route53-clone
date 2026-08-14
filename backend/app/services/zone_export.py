@@ -8,7 +8,7 @@ def export_bind(zone: HostedZone, records: list[DnsRecord]) -> str:
     """Render a hosted zone and its records as a BIND zone file."""
     lines: list[str] = [
         f"; Zone file for {zone.name}",
-        f"; Exported from Route 53 Clone",
+        "; Exported from Route 53 Clone",
         f"$ORIGIN {zone.name}",
         "$TTL 300",
         "",

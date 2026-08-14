@@ -11,4 +11,4 @@ from app.models.hosted_zone import HostedZone
 from app.models.user import User
 from app.models.user_session import UserSession
 
-__all__ = ["Base", "TimestampMixin", "User", "UserSession", "HostedZone", "DnsRecord", "Feedback"]
+__all__ = ["Base", "DnsRecord", "Feedback", "HostedZone", "TimestampMixin", "User", "UserSession"]
